@@ -9,4 +9,9 @@ void MovementDetectorTask::init(int period) {
 }
 
 void MovementDetectorTask::moveDetector( void* a) {
+  Serial.println("Ciao");
+  delay(500);
+
+  Serial.println("Ciccio");
+  delay(500);
 }
