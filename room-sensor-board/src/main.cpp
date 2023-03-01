@@ -1,6 +1,7 @@
 #include <Arduino.h>
 #include "./devices/Photoresistor.h"
 #include "./devices/Pir.h"
+#include "impl.h"
 
 #define LIGHT_THRESHOLD 600
 
@@ -14,12 +15,12 @@ TaskHandle_t Task1;
 TaskHandle_t Task2;
 
 const int pir_led = 39;
-Photoresistor* photoresistor = new Photoresistor(40, 100);
-Pir* pir = new Pir(pir_led, 10);
+//Photoresistor* photoresistor = new Photoresistor(40, 100);
+//Pir* pir = new Pir(pir_led, 10);
 
 void setup() {
   Serial.begin(9600); 
-  pir->calibrating();
+  xTaskCreatePinnedToCore(impl::moveDetectorTask,"Task1",10000,NULL,1,&Task1,0);
 
   //xTaskCreatePinnedToCore(Task1code,"Task1",10000,NULL,1,&Task1,0);                         
   //delay(500); 
@@ -27,6 +28,8 @@ void setup() {
   //xTaskCreatePinnedToCore(Task2code,"Task2",10000,NULL,1,&Task2,1);          
   //delay(500); 
 }
+
+
 
 /*
 void Task2code( void * parameter ){
