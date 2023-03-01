@@ -1,31 +1,122 @@
 #include <Arduino.h>
+#include <WiFi.h>
+#include <PubSubClient.h>
+#define MSG_BUFFER_SIZE  50
 #include "./devices/Photoresistor.h"
 #include "./devices/Pir.h"
 #include "impl.h"
 
 #define LIGHT_THRESHOLD 600
 
-/*
- * Second example, about tasks that can be run
- * thanks to FreeRTOS support.  
- *
- */
+/* wifi network info */
+
+const char* ssid = "ap";
+const char* password = "admin222";
+
+/* MQTT server address */
+const char* mqtt_server = "broker.mqtt-dashboard.com";
+
+/* MQTT topic */
+const char* topic = "light";
+
+/* MQTT client management */
+
+WiFiClient espClient;
+PubSubClient client(espClient);
+
+
+unsigned long lastMsgTime = 0;
+char msg[MSG_BUFFER_SIZE];
+int value = 0;
  
 TaskHandle_t Task1;
 TaskHandle_t Task2;
 
-const int pir_led = 39;
-//Photoresistor* photoresistor = new Photoresistor(40, 100);
-//Pir* pir = new Pir(pir_led, 10);
+
+void setup_wifi() {
+
+  delay(10);
+
+  Serial.println(String("Connecting to ") + ssid);
+
+  WiFi.mode(WIFI_STA);
+  WiFi.begin(ssid, password);
+
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+
+  Serial.println("");
+  Serial.println("WiFi connected");
+  Serial.println("IP address: ");
+  Serial.println(WiFi.localIP());
+}
+
+/* MQTT subscribing callback */
+
+void callback(char* topic, byte* payload, unsigned int length) {
+  Serial.println(String("Message arrived on [") + topic + "] len: " + length );
+}
+
+void reconnect() {
+  
+  // Loop until we're reconnected
+  
+  while (!client.connected()) {
+    Serial.print("Attempting MQTT connection...");
+    
+    // Create a random client ID
+    String clientId = String("esiot-2122-client-")+String(random(0xffff), HEX);
+
+    // Attempt to connect
+    if (client.connect(clientId.c_str())) {
+      Serial.println("connected");
+      // Once connected, publish an announcement...
+      // client.publish("outTopic", "hello world");
+      // ... and resubscribe
+      client.subscribe(topic);
+    } else {
+      Serial.print("failed, rc=");
+      Serial.print(client.state());
+      Serial.println(" try again in 5 seconds");
+      // Wait 5 seconds before retrying
+      delay(5000);
+    }
+  }
+}
 
 void setup() {
-  Serial.begin(9600); 
+  Serial.begin(9600);
+
+  // Serial.begin(115200);
+  setup_wifi();
+  randomSeed(micros());
+  client.setServer(mqtt_server, 1883);
+  client.setCallback(callback);
+
   xTaskCreatePinnedToCore(impl::moveDetectorTask,"Task1",10000,NULL,1,&Task1,0);
   xTaskCreatePinnedToCore(impl::photoresistorTask,"Task2",10000,NULL,1,&Task2,1);
 }
 
 void loop() {
-  //Serial.print("this is the main loop running on core ");
-  //Serial.println(xPortGetCoreID());
 
+  if (!client.connected()) {
+    reconnect();
+  }
+  client.loop();
+
+  unsigned long now = millis();
+  if (now - lastMsgTime > 10000) {
+    lastMsgTime = now;
+    value++;
+
+    /* creating a msg in the buffer */
+    snprintf (msg, MSG_BUFFER_SIZE, "hello world #%ld", value);
+
+    Serial.println(String("Publishing message: ") + msg);
+    
+    /* publishing the msg */
+    client.publish(topic, msg);  
+  }
 }
