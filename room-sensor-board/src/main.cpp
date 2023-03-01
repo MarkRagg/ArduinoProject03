@@ -21,28 +21,8 @@ const int pir_led = 39;
 void setup() {
   Serial.begin(9600); 
   xTaskCreatePinnedToCore(impl::moveDetectorTask,"Task1",10000,NULL,1,&Task1,0);
-
-  //xTaskCreatePinnedToCore(Task1code,"Task1",10000,NULL,1,&Task1,0);                         
-  //delay(500); 
-
-  //xTaskCreatePinnedToCore(Task2code,"Task2",10000,NULL,1,&Task2,1);          
-  //delay(500); 
+  xTaskCreatePinnedToCore(impl::photoresistorTask,"Task2",10000,NULL,1,&Task2,1);
 }
-
-
-
-/*
-void Task2code( void * parameter ){
-  Serial.print("Task2 is running on core ");
-  Serial.println(xPortGetCoreID());
-
-  for(;;){
-    digitalWrite(led_2, HIGH);
-    delay(1000);
-    digitalWrite(led_2, LOW);
-    delay(1000);
-  }
-}*/
 
 void loop() {
   //Serial.print("this is the main loop running on core ");
