@@ -9,15 +9,19 @@
 void impl::moveDetectorTask( void* parameter) {
   Pir* pir = new Pir(PIR_LED, PIR_TRESHOLD);
   Led* green_led = new Led(GREEN_LED);
+  movement = false;
+  day = true;
   pir->calibrating();
 
   for(;;) {
-    if(pir->isDetected()) {
+    if(pir->isDetected() && !day) {
       //Serial.println("Detected!");
       green_led->switchOn();
+      movement = true;
     } else {
       //Serial.println("Not Detected!");
       green_led->switchOff();
+      movement = false;
     }
     delay(100);
   }
@@ -25,9 +29,14 @@ void impl::moveDetectorTask( void* parameter) {
 
 void impl::photoresistorTask( void* parameter) {
   Photoresistor* photores = new Photoresistor(PHOTORESISTOR_LED, PHOTORESISTOR_TRESHOLD);
+  day = true;
 
   for(;;) {
-    Serial.println(photores->readLuminosity());
+    if(photores->isLuminosityHigher()) {
+      day = true;
+    } else {
+      day = false;
+    }
     delay(100);
   }
 }
