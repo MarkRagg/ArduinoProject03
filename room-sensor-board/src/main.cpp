@@ -1,11 +1,11 @@
 #include <Arduino.h>
 #include <WiFi.h>
 #include <PubSubClient.h>
-#define MSG_BUFFER_SIZE  50
 #include "./devices/Photoresistor.h"
 #include "./devices/Pir.h"
 #include "impl.h"
 
+#define MSG_BUFFER_SIZE  50
 #define LIGHT_THRESHOLD 600
 
 /* wifi network info */
@@ -17,7 +17,8 @@ const char* password = "admin222";
 const char* mqtt_server = "broker.mqtt-dashboard.com";
 
 /* MQTT topic */
-const char* topic = "light";
+const char* topic1 = "light";
+const char* topic2 = "movement";
 
 /* MQTT client management */
 
@@ -26,12 +27,11 @@ PubSubClient client(espClient);
 
 
 unsigned long lastMsgTime = 0;
-char msg[MSG_BUFFER_SIZE];
-int value = 0;
+char msg1[MSG_BUFFER_SIZE];
+char msg2[MSG_BUFFER_SIZE];
  
 TaskHandle_t Task1;
 TaskHandle_t Task2;
-
 
 void setup_wifi() {
 
@@ -67,7 +67,7 @@ void reconnect() {
     Serial.print("Attempting MQTT connection...");
     
     // Create a random client ID
-    String clientId = String("esiot-2122-client-")+String(random(0xffff), HEX);
+    String clientId = String("esp-")+String(random(0xffff), HEX);
 
     // Attempt to connect
     if (client.connect(clientId.c_str())) {
@@ -75,7 +75,8 @@ void reconnect() {
       // Once connected, publish an announcement...
       // client.publish("outTopic", "hello world");
       // ... and resubscribe
-      client.subscribe(topic);
+      // client.subscribe(topic1);
+      // client.subscribe(topic2);
     } else {
       Serial.print("failed, rc=");
       Serial.print(client.state());
@@ -109,14 +110,16 @@ void loop() {
   unsigned long now = millis();
   if (now - lastMsgTime > 10000) {
     lastMsgTime = now;
-    value++;
 
     /* creating a msg in the buffer */
-    snprintf (msg, MSG_BUFFER_SIZE, "hello world #%ld", value);
+    snprintf (msg1, MSG_BUFFER_SIZE, "Day: #%ld", impl::day);
+    snprintf (msg2, MSG_BUFFER_SIZE, "Movement: #%ld", impl::movement);
 
-    Serial.println(String("Publishing message: ") + msg);
+    Serial.println(String("Publishing message: ") + msg1);
+    Serial.println(String("Publishing message: ") + msg2);
     
     /* publishing the msg */
-    client.publish(topic, msg);  
+    client.publish(topic1, msg1);  
+    client.publish(topic2, msg2);  
   }
 }
