@@ -10,8 +10,8 @@
 
 /* wifi network info */
 
-const char* ssid = "ap";
-const char* password = "admin222";
+const char* ssid = "malware";
+const char* password = "cicciogamer";
 
 /* MQTT server address */
 const char* mqtt_server = "broker.mqtt-dashboard.com";
@@ -112,8 +112,8 @@ void loop() {
     lastMsgTime = now;
 
     /* creating a msg in the buffer */
-    snprintf (msg1, MSG_BUFFER_SIZE, "Day: #%ld", impl::day);
-    snprintf (msg2, MSG_BUFFER_SIZE, "Movement: #%ld", impl::movement);
+    snprintf (msg1, MSG_BUFFER_SIZE, "Day: #%ld", 1);
+    snprintf (msg2, MSG_BUFFER_SIZE, "Movement: #%ld", 2);
 
     Serial.println(String("Publishing message: ") + msg1);
     Serial.println(String("Publishing message: ") + msg2);
