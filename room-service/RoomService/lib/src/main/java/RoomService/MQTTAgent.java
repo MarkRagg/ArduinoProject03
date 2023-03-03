@@ -27,14 +27,14 @@ public class MQTTAgent extends AbstractVerticle {
 			  System.out.println("Content(as string) of the message: " + s.payload().toString());
 			  System.out.println("QoS: " + s.qosLevel());
 			})
-			.subscribe("esiot-2122", 2);		
+			.subscribe("light", 2);		
 
 			log("publishing a msg");
-			client.publish("esiot-2122",
+			/*client.publish("esiot-2122",
 				  Buffer.buffer("hello"),
 				  MqttQoS.AT_LEAST_ONCE,
 				  false,
-				  false);
+				  false);*/
 		});
 	}
 	
