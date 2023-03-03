@@ -8,6 +8,11 @@
 #define MSG_BUFFER_SIZE  50
 #define LIGHT_THRESHOLD 600
 
+/* Take global variables */
+
+extern bool day;
+extern bool movement;
+
 /* wifi network info */
 
 const char* ssid = "malware";
@@ -112,8 +117,8 @@ void loop() {
     lastMsgTime = now;
 
     /* creating a msg in the buffer */
-    snprintf (msg1, MSG_BUFFER_SIZE, "Day: #%ld", 1);
-    snprintf (msg2, MSG_BUFFER_SIZE, "Movement: #%ld", 2);
+    snprintf (msg1, MSG_BUFFER_SIZE, "Day: #%ld", day);
+    snprintf (msg2, MSG_BUFFER_SIZE, "Movement: #%ld", movement);
 
     Serial.println(String("Publishing message: ") + msg1);
     Serial.println(String("Publishing message: ") + msg2);
