@@ -15,8 +15,8 @@ extern bool movement;
 
 /* wifi network info */
 
-const char* ssid = "malware";
-const char* password = "cicciogamer";
+const char* ssid = "ap";
+const char* password = "admin222";
 
 /* MQTT server address */
 const char* mqtt_server = "broker.mqtt-dashboard.com";
@@ -117,8 +117,8 @@ void loop() {
     lastMsgTime = now;
 
     /* creating a msg in the buffer */
-    snprintf (msg1, MSG_BUFFER_SIZE, "Day: #%ld", day);
-    snprintf (msg2, MSG_BUFFER_SIZE, "Movement: #%ld", movement);
+    snprintf (msg1, MSG_BUFFER_SIZE, "Day: %d", day);
+    snprintf (msg2, MSG_BUFFER_SIZE, "Movement: %d", movement);
 
     Serial.println(String("Publishing message: ") + msg1);
     Serial.println(String("Publishing message: ") + msg2);
