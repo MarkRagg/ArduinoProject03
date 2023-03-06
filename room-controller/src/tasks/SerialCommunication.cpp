@@ -12,4 +12,12 @@ void SerialCommunication::init(int period) {
 
 void SerialCommunication::tick() {
   Serial.println("LightOn: "+ String(lightOn));
+  if (Serial.available()){
+  char data = Serial.read();
+    if (data =='1'){
+      Serial.println("ON");  
+    } else if (data =='0'){
+      Serial.println("OFF");
+    }
+  }  
 }
