@@ -1,9 +1,17 @@
 #include <Arduino.h>
+#include "scheduler/Scheduler.h"
+#include "tasks/SerialCommunication.h"
+
+Scheduler sched;
 
 void setup() {
-  // put your setup code here, to run once:
+  Task* serial = new SerialCommunication();
+  
+  serial->init(500);
+
+  sched.addTask(serial);
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
+  sched.schedule();
 }
