@@ -1,8 +1,6 @@
-package RoomService;
+package RoomService.mqtt;
 
-import io.netty.handler.codec.mqtt.MqttQoS;
 import io.vertx.core.AbstractVerticle;
-import io.vertx.core.buffer.Buffer;
 import io.vertx.mqtt.MqttClient;
 
 /*
