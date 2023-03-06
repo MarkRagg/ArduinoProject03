@@ -1,5 +1,11 @@
 package RoomService.mqtt;
 
+import java.util.Date;
+import java.util.Map;
+
+import org.apache.commons.math3.util.Pair;
+
+import RoomService.RoomState;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.mqtt.MqttClient;
 
@@ -20,26 +26,20 @@ public class MQTTAgent extends AbstractVerticle {
 			log("connected");
 			
 			log("subscribing...");
-			client.publishHandler(s -> {
-			  System.out.println("There are new message in topic: " + s.topicName());
-			  System.out.println("Content(as string) of the message: " + s.payload().toString());
-			  System.out.println("QoS: " + s.qosLevel());
-			})
-			.subscribe("light", 2);
 			
 			client.publishHandler(s -> {
 				  System.out.println("There are new message in topic: " + s.topicName());
+				  
+				  if(s.topicName().equals(Topics.LIGHT.getName())) {
+					  RoomState.getInstance().getLightStateHistory().add(new Pair<Date, String>(new Date(), s.payload().toString()));
+				  } else {
+					  RoomState.getInstance().getMovementStateHistory().add(new Pair<Date, String>(new Date(), s.payload().toString()));
+				  }
+				  
 				  System.out.println("Content(as string) of the message: " + s.payload().toString());
 				  System.out.println("QoS: " + s.qosLevel());
 				})
-				.subscribe("movement", 2);
-
-			log("publishing a msg");
-			/*client.publish("esiot-2122",
-				  Buffer.buffer("hello"),
-				  MqttQoS.AT_LEAST_ONCE,
-				  false,
-				  false);*/
+				.subscribe(Map.of("movement", 2, "light", 2));
 		});
 	}
 	
@@ -48,4 +48,19 @@ public class MQTTAgent extends AbstractVerticle {
 		System.out.println("[MQTT AGENT] "+msg);
 	}
 
+	private enum Topics {
+		MOVEMENT("movement"),
+		LIGHT("light");
+		
+		private String name;
+		
+		private Topics(final String name) {
+			this.name = name;
+		}
+
+		public String getName() {
+			return name;
+		}
+	}
+	
 }

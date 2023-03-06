@@ -1,7 +1,7 @@
 package RoomService.http;
 
+import RoomService.RoomState;
 import io.vertx.core.AbstractVerticle;
-import io.vertx.core.http.HttpServerResponse;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
@@ -30,17 +30,14 @@ public class RoomResource extends AbstractVerticle {
 	
 	private void handleGetResource(RoutingContext routingContext) {
 		JsonObject res = new JsonObject();
-		res.put("message", "ROOM RESOURCE RES");
+		res.put("light", RoomState.getInstance().getLightStateHistory());
+		res.put("movement", RoomState.getInstance().getMovementStateHistory());
 		
 		routingContext.response()
 			.putHeader("content-type", "application/json")
 			.end(res.encodePrettily());
 	}
 	
-	private void sendError(int statusCode, HttpServerResponse response) {
-		response.setStatusCode(statusCode).end();
-	}
-
 	private void log(String msg) {
 		System.out.println("[ROOM RESOURCE] "+msg);
 	}
