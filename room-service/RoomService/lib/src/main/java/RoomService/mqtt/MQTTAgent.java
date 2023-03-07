@@ -39,7 +39,7 @@ public class MQTTAgent extends AbstractVerticle {
 				  System.out.println("Content(as string) of the message: " + s.payload().toString());
 				  System.out.println("QoS: " + s.qosLevel());
 				})
-				.subscribe(Map.of("movement", 2, "light", 2));
+				.subscribe(Map.of(Topics.MOVEMENT.getName(), 2, Topics.LIGHT.getName(), 2));
 		});
 	}
 	
