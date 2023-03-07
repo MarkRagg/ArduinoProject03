@@ -8,7 +8,7 @@ public class RunService {
 
 	public static void main(String[] args) {
 		Vertx vertxHttp = Vertx.vertx();
-		RoomResource service = new RoomResource(8080);
+		RoomResource service = new RoomResource(3030);
 		vertxHttp.deployVerticle(service);
 		
 		Vertx vertxMqtt = Vertx.vertx();

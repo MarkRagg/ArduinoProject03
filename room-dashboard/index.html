@@ -5,15 +5,17 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Room Dashboard</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script defer src="./index.js"></script>
 </head>
 <body>
-    <script>
-        const BASE_PATH = "localhost:8080"
-
-        fetch(BASE_PATH + "/api/room").then(res => res.json())
-            .then(console.log(res))
-    </script>
-
-    CIAO
+    <h1>Room Data Charts</h1>
+    <div id="chartsContainer">
+        <canvas id="roomDataChartMovement" style="width:100%;max-width:100%;height: 60vh;"></canvas>
+        <canvas id="roomDataChartLight" style="width:100%;max-width:100%; height: 60vh;"></canvas>
+    </div>
 </body>
 </html>

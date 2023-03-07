@@ -5,7 +5,7 @@ import io.vertx.core.AbstractVerticle;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
-import io.vertx.ext.web.handler.BodyHandler;
+import io.vertx.ext.web.handler.CorsHandler;
 
 public class RoomResource extends AbstractVerticle {
 	
@@ -18,7 +18,7 @@ public class RoomResource extends AbstractVerticle {
 	@Override
 	public void start() {		
 		Router router = Router.router(vertx);
-		router.route().handler(BodyHandler.create());
+		router.route().handler(CorsHandler.create("http://localhost"));
 		router.get("/api/room").handler(this::handleGetResource);		
 		vertx
 			.createHttpServer()

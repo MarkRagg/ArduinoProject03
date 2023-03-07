@@ -6,7 +6,9 @@ import java.util.Map;
 import org.apache.commons.math3.util.Pair;
 
 import RoomService.RoomState;
+import io.netty.handler.codec.mqtt.MqttQoS;
 import io.vertx.core.AbstractVerticle;
+import io.vertx.core.buffer.Buffer;
 import io.vertx.mqtt.MqttClient;
 
 /*
@@ -40,6 +42,20 @@ public class MQTTAgent extends AbstractVerticle {
 				  System.out.println("QoS: " + s.qosLevel());
 				})
 				.subscribe(Map.of(Topics.MOVEMENT.getName(), 2, Topics.LIGHT.getName(), 2));
+			
+			for(int i = 0; i < 100; i++) {
+	                        client.publish("movement", 
+	                                Buffer.buffer(Double.toString(Math.random() * 100)),
+	                                MqttQoS.EXACTLY_ONCE,
+	                                false,
+	                                false);
+
+	                        client.publish("light", 
+	                                Buffer.buffer(Double.toString(Math.random() * 100)),
+	                                MqttQoS.EXACTLY_ONCE,
+	                                false,
+	                                false);
+			}
 		});
 	}
 	
