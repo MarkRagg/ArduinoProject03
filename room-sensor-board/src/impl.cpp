@@ -9,11 +9,10 @@
 bool day;
 bool movement;
 
-void impl::moveDetectorTask( void* parameter) {
+void impl::moveDetectorTask(void* parameter) {
   Pir* pir = new Pir(PIR_LED, PIR_TRESHOLD);
   Led* green_led = new Led(GREEN_LED);
   movement = false;
-  day = true;
   pir->calibrating();
 
   for(;;) {
@@ -30,7 +29,7 @@ void impl::moveDetectorTask( void* parameter) {
   }
 }
 
-void impl::photoresistorTask( void* parameter) {
+void impl::photoresistorTask(void* parameter) {
   Photoresistor* photores = new Photoresistor(PHOTORESISTOR_LED, PHOTORESISTOR_TRESHOLD);
   day = true;
 
