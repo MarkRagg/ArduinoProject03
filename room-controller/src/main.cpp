@@ -10,7 +10,8 @@ int colon = 0;
 
 void setup() {
   Task* serial = new SerialCommunication();
-  
+  Serial.begin(9600);
+  Serial.setTimeout(1);
   serial->init(500);
 
   sched.addTask(serial);
