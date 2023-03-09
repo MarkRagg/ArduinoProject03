@@ -29,8 +29,8 @@ public class RunService {
 			while(true) {
 				monitor.sendMsg(msgToArduino.toJson(msgJson));
 				if(monitor.isMsgAvailable()) {
-					String msg = monitor.receiveMsg();
-					System.out.println(msg);
+					ArduinoMsg receivedJson = msgToArduino.fromJson(monitor.receiveMsg(), ArduinoMsg.class);
+					System.out.println(receivedJson.toString());
 				} else {
 					System.out.println("No msg available");
 				}
@@ -38,6 +38,7 @@ public class RunService {
 				Thread.sleep(2000);
 			}
 		} catch (Exception ex) {
+			System.out.println("msg available");
 			ex.printStackTrace();
 		}
 	}

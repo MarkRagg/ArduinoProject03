@@ -26,6 +26,11 @@ public class ArduinoMsg {
 	public void setA(final int a) {
 		this.a = a;
 	}
+
+	@Override
+	public String toString() {
+		return "ArduinoMsg [b=" + b + ", a=" + a + "]";
+	}
 	
 	
 }
