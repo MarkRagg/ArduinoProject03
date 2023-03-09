@@ -1,4 +1,4 @@
-package RoomService;
+package RoomService.serial;
 
 /**
  *

@@ -1,4 +1,4 @@
-package RoomService;
+package RoomService.serial;
 
 /**
  * Simple interface for an async msg communication channel

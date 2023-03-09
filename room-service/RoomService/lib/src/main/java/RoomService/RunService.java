@@ -1,7 +1,12 @@
 package RoomService;
 
+import com.google.gson.Gson;
+
 import RoomService.http.RoomResource;
 import RoomService.mqtt.MQTTAgent;
+import RoomService.serial.ArduinoMsg;
+import RoomService.serial.CommChannel;
+import RoomService.serial.SerialCommChannel;
 import io.vertx.core.Vertx;
 
 public class RunService {
@@ -16,21 +21,21 @@ public class RunService {
 		vertxMqtt.deployVerticle(agent);
 		
 		final String portName = "COM3";
+		Gson msgToArduino = new Gson();
+		ArduinoMsg msgJson = new ArduinoMsg(2, 3);
 		System.out.println("Start monitoring serial port "+portName+" at 9600 boud rate");
 		try {
 			CommChannel monitor = new SerialCommChannel(portName, 9600);
 			while(true) {
+				monitor.sendMsg(msgToArduino.toJson(msgJson));
 				if(monitor.isMsgAvailable()) {
 					String msg = monitor.receiveMsg();
-					System.out.print(msg);
-					String msgSend = "Ciao Ciccio";
-					monitor.sendMsg(msgSend);
-					System.out.print("Sending: " + msgSend);
+					System.out.println(msg);
 				} else {
-					System.out.print("No msg available");
+					System.out.println("No msg available");
 				}
 
-				Thread.sleep(1000);
+				Thread.sleep(2000);
 			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
