@@ -14,6 +14,26 @@ public class RunService {
 		Vertx vertxMqtt = Vertx.vertx();
 		MQTTAgent agent = new MQTTAgent();
 		vertxMqtt.deployVerticle(agent);
+		
+		final String portName = "COM3";
+		System.out.println("Start monitoring serial port "+portName+" at 9600 boud rate");
+		try {
+			CommChannel monitor = new SerialCommChannel(portName, 9600);
+			while(true) {
+				if(monitor.isMsgAvailable()) {
+					String msg = monitor.receiveMsg();
+					System.out.print(msg);
+					String msgSend = "Ciao Ciccio";
+					monitor.sendMsg(msgSend);
+					System.out.print("Sending: " + msgSend);
+				} else {
+					System.out.print("No msg available");
+				}
+
+				Thread.sleep(1000);
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
 	}
-	
 }

@@ -14,7 +14,7 @@ void setup() {
 }
 
 void loop() {
-  Serial.print("CIAO");
+  Serial.println("CIAO");
   delay(1000);
   //sched.schedule();
 }
