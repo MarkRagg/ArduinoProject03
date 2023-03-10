@@ -27,9 +27,11 @@ public class RunService {
 		try {
 			CommChannel monitor = new SerialCommChannel(portName, 9600);
 			while(true) {
-				monitor.sendMsg(msgToArduino.toJson(msgJson));
+				//monitor.sendMsg(msgToArduino.toJson(msgJson));
 				if(monitor.isMsgAvailable()) {
-					ArduinoMsg receivedJson = msgToArduino.fromJson(monitor.receiveMsg(), ArduinoMsg.class);
+					String msg = monitor.receiveMsg();
+					System.out.println(msg);
+					ArduinoMsg receivedJson = msgToArduino.fromJson(msg, ArduinoMsg.class);
 					System.out.println(receivedJson.toString());
 				} else {
 					System.out.println("No msg available");
@@ -38,7 +40,6 @@ public class RunService {
 				Thread.sleep(2000);
 			}
 		} catch (Exception ex) {
-			System.out.println("msg available");
 			ex.printStackTrace();
 		}
 	}

@@ -23,8 +23,12 @@ void setup() {
   sched.addTask(serial);
   b = "pera: ciao, mela: miao, banana: biao, kiwi: kiao";
   
-
+    
+  doc["b"] = test1;
+  doc["a"] = test2;
+  serializeJson(doc, str);
   MsgService.init();
+  delay(10000);
 }
 
 void loop() {
@@ -48,9 +52,6 @@ void loop() {
     /* NOT TO FORGET: message deallocation */
     delete msg;
   } else {
-    doc["test1"] = test1;
-    doc["test2"] = test2;
-    serializeJson(doc, str);
     MsgService.sendMsg(str);
   }
 }
