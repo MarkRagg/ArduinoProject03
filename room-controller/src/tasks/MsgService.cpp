@@ -1,20 +1,16 @@
 #include "Arduino.h"
 #include "MsgService.h"
 
-String content;
-
-MsgServiceClass MsgService;
-
 bool MsgServiceClass::isMsgAvailable(){
-  return msgAvailable;
+  return this->msgAvailable;
 }
 
 Msg* MsgServiceClass::receiveMsg(){
-  if (msgAvailable){
+  if (this->msgAvailable){
     Msg* msg = currentMsg;
-    msgAvailable = false;
-    currentMsg = NULL;
-    content = "";
+    this->msgAvailable = false;
+    this->currentMsg = NULL;
+    this->content = "";
     return msg;  
   } else {
     return NULL; 
@@ -23,10 +19,13 @@ Msg* MsgServiceClass::receiveMsg(){
 
 void MsgServiceClass::init(){
   Serial.begin(9600);
-  content.reserve(256);
-  content = "";
-  currentMsg = NULL;
-  msgAvailable = false;  
+  while(!Serial) {
+
+  }
+  this->content.reserve(256);
+  this->content = "";
+  this->currentMsg = NULL;
+  this->msgAvailable = false;  
 }
 
 void MsgServiceClass::sendMsg(const String& msg){
@@ -37,32 +36,15 @@ void MsgServiceClass::sendMsg(const String& msg){
 //   Serial.println(msg.getContent());  
 // }
 
-void serialEvent() {
+void MsgServiceClass::serialEvent() {
   /* reading the content */
   while (Serial.available()) {
     char ch = (char) Serial.read();
     if (ch == '\n'){
-      MsgService.currentMsg = new Msg(content);
-      MsgService.msgAvailable = true;      
+      this->currentMsg = new Msg(this->content);
+      this->msgAvailable = true;      
     } else {
-      content += ch;      
+      this->content += ch;      
     }
   }
-}
-
-bool MsgServiceClass::isMsgAvailable(Pattern& pattern){
-  return (msgAvailable && pattern.match(*currentMsg));
-}
-
-Msg* MsgServiceClass::receiveMsg(Pattern& pattern){
-  if (msgAvailable && pattern.match(*currentMsg)){
-    Msg* msg = currentMsg;
-    msgAvailable = false;
-    currentMsg = NULL;
-    content = "";
-    return msg;  
-  } else {
-    return NULL; 
-  }
-  
 }
