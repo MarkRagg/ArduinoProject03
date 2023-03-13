@@ -1,57 +1,32 @@
 #include <Arduino.h>
 #include "scheduler/Scheduler.h"
-#include "tasks/SerialCommunication.h"
 #include "tasks/MsgService.h"
 #include <ArduinoJson.h>
 
 Scheduler sched;
-String b;
-int comma = 0;
-int colon = 0;
 
 int test1 = 1;
 int test2 = 2;
-DynamicJsonDocument doc(1024);
+
 String str;
 
-void setup() {
-  Task* serial = new SerialCommunication();
-  Serial.begin(9600);
-  Serial.setTimeout(1);
-  serial->init(500);
+MsgServiceClass MsgService;
 
-  sched.addTask(serial);
-  b = "pera: ciao, mela: miao, banana: biao, kiwi: kiao";
-  
-    
-  doc["b"] = test1;
-  doc["a"] = test2;
-  serializeJson(doc, str);
+void setup() {
   MsgService.init();
-  delay(10000);
 }
 
 void loop() {
-  // sched.schedule();
-  // int MyI = b.indexOf(",",comma);
-  // String s = b.substring(comma,MyI);
-  // Serial.println(s + "1");
-  // int My = b.indexOf(":",colon);
-  // String s2 = b.substring(colon,My);
-  // Serial.println(s2 + "2");
-  // comma = MyI + 1;
-  // colon = MyI + 1;
-  // delay(1000);
-
-
   delay(1000);
+  MsgService.serialEvent();
   if (MsgService.isMsgAvailable()) {
-    Msg* msg = MsgService.receiveMsg();    
-    MsgService.sendMsg("Ricevuto");
-    
+    Msg* msg = MsgService.receiveMsg(); 
+    StaticJsonDocument<56> doc;
+    deserializeJson(doc, msg->getContent());
+    serializeJson(doc, Serial);
+    Serial.println("");  
+
     /* NOT TO FORGET: message deallocation */
     delete msg;
-  } else {
-    MsgService.sendMsg(str);
   }
 }
