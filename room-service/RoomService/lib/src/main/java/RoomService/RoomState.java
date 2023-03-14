@@ -6,11 +6,13 @@ import java.util.List;
 
 import org.apache.commons.math3.util.Pair;
 
+import RoomService.mqtt.MQTTMsg;
+
 public class RoomState {
 
 	private static RoomState instance = null;
 	
-	private List<Pair<Date, String>> lightStateHistory;
+	private List<MQTTMsg> lightStateHistory;
 	private List<Pair<Date, String>> movementStateHistory;
 	
 	private RoomState() {
@@ -25,7 +27,7 @@ public class RoomState {
         return instance;
     }
 
-	public List<Pair<Date, String>> getLightStateHistory() {
+	public List<MQTTMsg> getLightStateHistory() {
 		return lightStateHistory;
 	}
 
