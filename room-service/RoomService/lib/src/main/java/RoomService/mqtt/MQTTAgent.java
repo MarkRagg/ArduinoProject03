@@ -37,9 +37,8 @@ public class MQTTAgent extends AbstractVerticle {
 				  System.out.println("There are new message in topic: " + s.topicName());
 				  
 				  if(s.topicName().equals(Topics.LIGHT.getName())) {
-					  System.out.println(s.payload().toString());
 					  MQTTMsg light = msgToEsp.fromJson(s.payload().toString(), MQTTMsg.class);
-					  light.setMsgDate(new Date());
+					  light.setMsgDate(LocalDateTime.now().getHour());
 					  RoomState.getInstance().getLightStateHistory().add(light);
 				  } else {
 					  RoomState.getInstance().getMovementStateHistory().add(new Pair<Date, String>(new Date(), s.payload().toString()));
@@ -51,9 +50,6 @@ public class MQTTAgent extends AbstractVerticle {
 				})
 				.subscribe(Map.of(Topics.MOVEMENT.getName(), 2, Topics.LIGHT.getName(), 2));
 		});
-	}
-	private String getValue(final String value) {
-		return value;
 	}
 
 	private void log(String msg) {

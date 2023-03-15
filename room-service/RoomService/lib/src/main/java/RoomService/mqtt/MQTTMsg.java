@@ -1,28 +1,28 @@
 package RoomService.mqtt;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 public class MQTTMsg {
 
-	private Date msgDate;
+	private int hoursDate;
 	private boolean day;
 	
 	public MQTTMsg(final boolean day) {
 		super();
-		this.msgDate = new Date();
+		this.hoursDate = LocalDateTime.now().getHour();
 		this.day = day;
 	}
 
-	public Date getMsgDate() {
-		return msgDate;
+	public int getMsgDate() {
+		return hoursDate;
 	}
 
 	public boolean getDay() {
 		return day;
 	}
 
-	public void setMsgDate(Date msgDate) {
-		this.msgDate = msgDate;
+	public void setMsgDate(int hoursDate) {
+		this.hoursDate = hoursDate;
 	}
 
 	public void setDay(boolean day) {
@@ -31,6 +31,6 @@ public class MQTTMsg {
 
 	@Override
 	public String toString() {
-		return "MQTTMsg [msgDate=" + this.msgDate + ", day=" + this.day + "]";
+		return "MQTTMsg [msgDate=" + this.hoursDate + ", day=" + this.day + "]";
 	}
 }
