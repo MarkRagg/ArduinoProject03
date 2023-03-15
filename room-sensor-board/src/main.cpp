@@ -4,9 +4,12 @@
 #include "./devices/Photoresistor.h"
 #include "./devices/Pir.h"
 #include "impl.h"
+#include <ArduinoJson.h>
 
 #define MSG_BUFFER_SIZE  50
 #define LIGHT_THRESHOLD 600
+
+char str[56];
 
 /* Take global variables */
 
@@ -108,6 +111,8 @@ void loop() {
   client.loop();
 
   unsigned long now = millis();
+  StaticJsonDocument<56> doc;
+
   if (now - lastMsgTime > 10000) {
     lastMsgTime = now;
 
@@ -117,7 +122,11 @@ void loop() {
 
     Serial.println(String("Publishing message: ") + msg1);
     Serial.println(String("Publishing message: ") + msg2);
-    
+
+    doc["day"] = day;
+
+    serializeJson(doc, msg1);
+
     /* publishing the msg */
     client.publish(topic1, msg1);  
     client.publish(topic2, msg2);  

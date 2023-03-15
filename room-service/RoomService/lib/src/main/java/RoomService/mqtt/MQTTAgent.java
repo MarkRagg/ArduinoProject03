@@ -1,9 +1,12 @@
 package RoomService.mqtt;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Map;
 
 import org.apache.commons.math3.util.Pair;
+
+import com.google.gson.Gson;
 
 import RoomService.RoomState;
 import io.netty.handler.codec.mqtt.MqttQoS;
@@ -22,6 +25,7 @@ public class MQTTAgent extends AbstractVerticle {
 	@Override
 	public void start() {		
 		MqttClient client = MqttClient.create(vertx);
+		Gson msgToEsp = new Gson();
 
 		client.connect(1883, "broker.mqtt-dashboard.com", c -> {
 
@@ -33,18 +37,24 @@ public class MQTTAgent extends AbstractVerticle {
 				  System.out.println("There are new message in topic: " + s.topicName());
 				  
 				  if(s.topicName().equals(Topics.LIGHT.getName())) {
-					  RoomState.getInstance().getLightStateHistory().add(new Pair<Date, String>(new Date(), s.payload().toString()));
+					  System.out.println(s.payload().toString());
+					  MQTTMsg light = msgToEsp.fromJson(s.payload().toString(), MQTTMsg.class);
+					  light.setMsgDate(new Date());
+					  RoomState.getInstance().getLightStateHistory().add(light);
 				  } else {
 					  RoomState.getInstance().getMovementStateHistory().add(new Pair<Date, String>(new Date(), s.payload().toString()));
 				  }
 				  
 				  System.out.println("Content(as string) of the message: " + s.payload().toString());
 				  System.out.println("QoS: " + s.qosLevel());
+				  
 				})
 				.subscribe(Map.of(Topics.MOVEMENT.getName(), 2, Topics.LIGHT.getName(), 2));
 		});
 	}
-	
+	private String getValue(final String value) {
+		return value;
+	}
 
 	private void log(String msg) {
 		System.out.println("[MQTT AGENT] "+msg);
