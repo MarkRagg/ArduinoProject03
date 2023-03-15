@@ -20,6 +20,16 @@ public class RunService {
 		MQTTAgent agent = new MQTTAgent();
 		vertxMqtt.deployVerticle(agent);
 		
+		while(true) {
+			System.out.println(RoomState.getInstance().getLightStateHistory().toString());
+			try {
+				Thread.sleep(2000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		/*
 		final String portName = "COM3";
 		Gson msgToArduino = new Gson();
 		ArduinoMsg msgJson = new ArduinoMsg(2, 3);
@@ -61,6 +71,6 @@ public class RunService {
 			sender.start();
 		}  catch (Exception e) {
 			e.printStackTrace();
-		}
+		}*/
 	}
 }
