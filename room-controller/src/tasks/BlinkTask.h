@@ -3,6 +3,8 @@
 
 #include "Task.h"
 #include "../devices/Led.h"
+#include "RollerBlindsTask.h"
+
 
 class BlinkTask: public Task {
 public:

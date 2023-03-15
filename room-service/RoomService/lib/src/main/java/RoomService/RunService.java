@@ -25,22 +25,42 @@ public class RunService {
 		ArduinoMsg msgJson = new ArduinoMsg(2, 3);
 		System.out.println("Start monitoring serial port "+portName+" at 9600 boud rate");
 		try {
-			CommChannel monitor = new SerialCommChannel(portName, 9600);
-			while(true) {
-				//monitor.sendMsg(msgToArduino.toJson(msgJson));
-				if(monitor.isMsgAvailable()) {
-					String msg = monitor.receiveMsg();
-					System.out.println(msg);
-					ArduinoMsg receivedJson = msgToArduino.fromJson(msg, ArduinoMsg.class);
-					System.out.println(receivedJson.toString());
-				} else {
-					System.out.println("No msg available");
+			final CommChannel monitor = new SerialCommChannel(portName, 9600);
+			final Thread sender = new Thread() {
+				@Override
+				public void run() {
+					while(true) {
+						try {
+							monitor.sendMsg(msgToArduino.toJson(msgJson));
+							Thread.sleep(1000);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
+					}
 				}
-
-				Thread.sleep(2000);
-			}
-		} catch (Exception ex) {
-			ex.printStackTrace();
+			};
+			final Thread receiver = new Thread() {
+				@Override 
+				public void run() {
+					while(true) {
+						try {
+							if(monitor.isMsgAvailable()) {
+								String msg;
+								msg = monitor.receiveMsg();
+								System.out.println(msg);
+								ArduinoMsg receivedJson = msgToArduino.fromJson(msg, ArduinoMsg.class);
+							}
+							Thread.sleep(1000);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}	
+					}
+				}
+			};
+			receiver.start();
+			sender.start();
+		}  catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 }

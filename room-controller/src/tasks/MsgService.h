@@ -24,6 +24,7 @@ public:
 class MsgServiceClass {
     
 public: 
+  String content;
   
   Msg* currentMsg;
   bool msgAvailable;
@@ -32,13 +33,10 @@ public:
 
   bool isMsgAvailable();
   Msg* receiveMsg();
-
-  bool isMsgAvailable(Pattern& pattern);
-
-  /* note: message deallocation is responsibility of the client */
-  Msg* receiveMsg(Pattern& pattern);
   
   void sendMsg(const String& msg);
+
+  void serialEvent();
 };
 
 extern MsgServiceClass MsgService;

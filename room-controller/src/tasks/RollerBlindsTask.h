@@ -4,6 +4,9 @@
 #include "Task.h"
 #include "../devices/ServoMotor.h"
 
+extern bool is_day;
+extern bool movement_rel;
+
 class RollerBlindsTask: public Task {
 public:
   RollerBlindsTask(int pin);

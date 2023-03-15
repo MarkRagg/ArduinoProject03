@@ -6,15 +6,16 @@
 #include <ArduinoJson.h>
 
 Scheduler sched;
-bool day = true;
-bool movement = false;
-bool manual = false;
-int rollerBlindsOpening = 0;
+// bool day = true;
+// bool movement = false;
+// bool manual = false;
+// int rollerBlindsOpening = 0;
 
-int test1 = 1;
-int test2 = 2;
-DynamicJsonDocument doc(1024);
+// int test1 = 1;
+// int test2 = 2;
+
 String str;
+MsgServiceClass MsgService;
 
 void setup() {
   sched.init(200);
@@ -31,33 +32,30 @@ void setup() {
 
   sched.addTask(blinking);
 
-  doc["b"] = test1;
-  doc["a"] = test2;
-  serializeJson(doc, str);
+  // doc["b"] = test1;
+  // doc["a"] = test2;
+  // serializeJson(doc, str);
 
   MsgService.init();
-  delay(10000);
 }
 
 void loop() {
-
+  
   delay(1000);
+  MsgService.serialEvent();
   if (MsgService.isMsgAvailable()) {
-    Msg* msg = MsgService.receiveMsg();    
-    MsgService.sendMsg("Ricevuto");
+    Msg* msg = MsgService.receiveMsg(); 
+    StaticJsonDocument<56> body;
+    deserializeJson(body, msg->getContent());
+    serializeJson(body, Serial);
+    Serial.println("");  
 
-    String json = msg->getContent();
+    // day = body["day"];
+    // movement = body["movement"];
+    // rollerBlindsOpening = body["angle"];
 
-    DynamicJsonDocument body(1024);
-    deserializeJson(body, json);
-
-    day = body["day"];
-    movement = body["movement"];
-    rollerBlindsOpening = body["angle"];
-
+    /* NOT TO FORGET: message deallocation */
     delete msg;
-  } else {
-    MsgService.sendMsg(str);
   }
 
   //sched.schedule();
