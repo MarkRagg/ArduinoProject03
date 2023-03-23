@@ -1,12 +1,16 @@
 package RoomService;
 
+import java.util.List;
+
 import com.google.gson.Gson;
 
 import RoomService.http.RoomResource;
 import RoomService.mqtt.MQTTAgent;
+import RoomService.mqtt.MQTTMsg;
 import RoomService.serial.ArduinoMsg;
 import RoomService.serial.CommChannel;
 import RoomService.serial.SerialCommChannel;
+import RoomService.serial.SerialCommunication;
 import io.vertx.core.Vertx;
 
 public class RunService {
@@ -20,16 +24,6 @@ public class RunService {
 		MQTTAgent agent = new MQTTAgent();
 		vertxMqtt.deployVerticle(agent);
 		
-		while(true) {
-			System.out.println(RoomState.getInstance().getLightStateHistory().toString());
-			try {
-				Thread.sleep(2000);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
-		
-		/*
 		final String portName = "COM3";
 		Gson msgToArduino = new Gson();
 		ArduinoMsg msgJson = new ArduinoMsg(2, 3);
@@ -40,8 +34,11 @@ public class RunService {
 				@Override
 				public void run() {
 					while(true) {
+						System.out.println(RoomState.getInstance().getLightStateHistory().toString());
+						MQTTMsg light =  RoomState.getInstance().getLastLightState();
+						SerialCommunication packet = new SerialCommunication(light.getDay(), true, false, light.getMsgDate(), 0, true);
 						try {
-							monitor.sendMsg(msgToArduino.toJson(msgJson));
+							monitor.sendMsg(msgToArduino.toJson(light));
 							Thread.sleep(1000);
 						} catch (InterruptedException e) {
 							e.printStackTrace();
@@ -71,6 +68,6 @@ public class RunService {
 			sender.start();
 		}  catch (Exception e) {
 			e.printStackTrace();
-		}*/
+		}
 	}
 }

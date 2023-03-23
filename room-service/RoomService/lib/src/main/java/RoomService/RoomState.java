@@ -27,11 +27,16 @@ public class RoomState {
         return instance;
     }
 
-	public List<MQTTMsg> getLightStateHistory() {
+	public synchronized List<MQTTMsg> getLightStateHistory() {
 		return lightStateHistory;
 	}
+	
+	public synchronized MQTTMsg getLastLightState() {
+		//return lightStateHistory.get(lightStateHistory.size());
+		return new MQTTMsg(false);
+	}
 
-	public List<Pair<Date, String>> getMovementStateHistory() {
+	public synchronized List<Pair<Date, String>> getMovementStateHistory() {
 		return movementStateHistory;
 	}	
 }
