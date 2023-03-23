@@ -6,6 +6,7 @@
 
 extern bool is_day;
 extern bool movement_rel;
+extern int rollerBlindsOpening;
 
 class RollerBlindsTask: public Task {
 public:

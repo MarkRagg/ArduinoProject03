@@ -2,6 +2,7 @@
 
 bool is_day;
 bool movement_rel;
+int rollerBlindsOpening;
 
 RollerBlindsTask::RollerBlindsTask(int pin){
   this->servo = new ServoMotor(pin); 
