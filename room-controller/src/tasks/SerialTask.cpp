@@ -10,7 +10,13 @@ void SerialTask::tick() {
   if (MsgService.isMsgAvailable()) {
     Msg* msg = MsgService.receiveMsg(); 
     StaticJsonDocument<56> body;
+    StaticJsonDocument<56> data;
     deserializeJson(body, msg->getContent());
+    is_day = body["day"];
+    data["day"] = body["day"];
+    data["movement"] = body["movement"];
+    movement_rel = body["movement"];
+    rollerBlindsOpening = body["rollerBlindsAngle"];
     serializeJson(body, Serial);
     Serial.println("");
 
