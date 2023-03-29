@@ -33,7 +33,7 @@ public class RunService {
 						MQTTMsg light =  RoomState.getInstance().getLastLightState();
 						SerialCommunication packet = new SerialCommunication(light.getDay(), true, false, light.getMsgDate(), 0, true);
 						try {
-							monitor.sendMsg(msgToArduino.toJson(light));
+							monitor.sendMsg(msgToArduino.toJson(packet));
 							Thread.sleep(1000);
 						} catch (InterruptedException e) {
 							e.printStackTrace();
