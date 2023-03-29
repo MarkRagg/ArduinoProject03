@@ -39,7 +39,8 @@ public class MQTTAgent extends AbstractVerticle {
 					  light.setMsgDate(LocalDateTime.now().getHour());
 					  RoomState.getInstance().getLightStateHistory().add(light);
 				  } else {
-					  RoomState.getInstance().getMovementStateHistory().add(new Pair<Date, String>(new Date(), s.payload().toString()));
+					  MQTTMovement movement = msgToEsp.fromJson(s.payload().toString(), MQTTMovement.class);
+					  RoomState.getInstance().getMovementStateHistory().add(movement);
 				  }
 				  
 				  System.out.println("Content(as string) of the message: " + s.payload().toString());

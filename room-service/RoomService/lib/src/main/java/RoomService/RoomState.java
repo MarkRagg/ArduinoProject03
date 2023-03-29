@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.apache.commons.math3.util.Pair;
 
+import RoomService.mqtt.MQTTMovement;
 import RoomService.mqtt.MQTTMsg;
 
 public class RoomState {
@@ -13,7 +14,7 @@ public class RoomState {
 	private static RoomState instance = null;
 	
 	private List<MQTTMsg> lightStateHistory;
-	private List<Pair<Date, String>> movementStateHistory;
+	private List<MQTTMovement> movementStateHistory;
 	
 	private RoomState() {
 		this.lightStateHistory = new ArrayList<>();
@@ -32,11 +33,14 @@ public class RoomState {
 	}
 	
 	public synchronized MQTTMsg getLastLightState() {
-		//return lightStateHistory.get(lightStateHistory.size());
-		return new MQTTMsg(false);
+		return lightStateHistory.get(lightStateHistory.size());
 	}
 
-	public synchronized List<Pair<Date, String>> getMovementStateHistory() {
+	public synchronized List<MQTTMovement> getMovementStateHistory() {
 		return movementStateHistory;
 	}	
+	
+	public synchronized MQTTMovement getLastMovementState() {
+		return movementStateHistory.get(movementStateHistory.size());
+	}
 }
