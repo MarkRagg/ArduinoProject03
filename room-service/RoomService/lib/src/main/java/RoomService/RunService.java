@@ -3,6 +3,7 @@ package RoomService;
 import com.google.gson.Gson;
 import RoomService.http.RoomResource;
 import RoomService.mqtt.MQTTAgent;
+import RoomService.mqtt.MQTTMovement;
 import RoomService.mqtt.MQTTMsg;
 import RoomService.serial.CommChannel;
 import RoomService.serial.SerialCommChannel;
@@ -20,7 +21,7 @@ public class RunService {
 		MQTTAgent agent = new MQTTAgent();
 		vertxMqtt.deployVerticle(agent);
 		
-		final String portName = "COM4";
+		final String portName = "COM3";
 		Gson msgToArduino = new Gson();
 		System.out.println("Start monitoring serial port "+portName+" at 9600 boud rate");
 		try {
@@ -31,7 +32,8 @@ public class RunService {
 					while(true) {
 						System.out.println(RoomState.getInstance().getLightStateHistory().toString());
 						MQTTMsg light =  RoomState.getInstance().getLastLightState();
-						SerialCommunication packet = new SerialCommunication(light.getDay(), true, false, light.getMsgDate(), 0, true);
+						MQTTMovement movement = RoomState.getInstance().getLastMovementState();
+						SerialCommunication packet = new SerialCommunication(light.getDay(), movement.getMovementState(), false, light.getMsgDate(), 0, true);
 						try {
 							monitor.sendMsg(msgToArduino.toJson(packet));
 							Thread.sleep(1000);

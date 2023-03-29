@@ -9,7 +9,7 @@ public class MQTTMovement {
 		this.movementState = movementState;
 	}
 
-	public boolean isMovementState() {
+	public boolean getMovementState() {
 		return movementState;
 	}
 

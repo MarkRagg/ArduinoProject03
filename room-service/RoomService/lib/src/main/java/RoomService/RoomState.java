@@ -1,10 +1,7 @@
 package RoomService;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-
-import org.apache.commons.math3.util.Pair;
 
 import RoomService.mqtt.MQTTMovement;
 import RoomService.mqtt.MQTTMsg;
