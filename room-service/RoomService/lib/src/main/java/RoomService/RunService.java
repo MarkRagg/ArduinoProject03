@@ -1,13 +1,9 @@
 package RoomService;
 
-import java.util.List;
-
 import com.google.gson.Gson;
-
 import RoomService.http.RoomResource;
 import RoomService.mqtt.MQTTAgent;
 import RoomService.mqtt.MQTTMsg;
-import RoomService.serial.ArduinoMsg;
 import RoomService.serial.CommChannel;
 import RoomService.serial.SerialCommChannel;
 import RoomService.serial.SerialCommunication;
@@ -24,9 +20,8 @@ public class RunService {
 		MQTTAgent agent = new MQTTAgent();
 		vertxMqtt.deployVerticle(agent);
 		
-		final String portName = "COM3";
+		final String portName = "COM4";
 		Gson msgToArduino = new Gson();
-		ArduinoMsg msgJson = new ArduinoMsg(2, 3);
 		System.out.println("Start monitoring serial port "+portName+" at 9600 boud rate");
 		try {
 			final CommChannel monitor = new SerialCommChannel(portName, 9600);
@@ -55,7 +50,6 @@ public class RunService {
 								String msg;
 								msg = monitor.receiveMsg();
 								System.out.println(msg);
-								ArduinoMsg receivedJson = msgToArduino.fromJson(msg, ArduinoMsg.class);
 							}
 							Thread.sleep(1000);
 						} catch (Exception e) {

@@ -1,7 +1,5 @@
 package RoomService.serial;
 
-import java.io.IOException;
-
 import jssc.*;
 
 public class ShowSerialPorts {

@@ -9,9 +9,7 @@ import org.apache.commons.math3.util.Pair;
 import com.google.gson.Gson;
 
 import RoomService.RoomState;
-import io.netty.handler.codec.mqtt.MqttQoS;
 import io.vertx.core.AbstractVerticle;
-import io.vertx.core.buffer.Buffer;
 import io.vertx.mqtt.MqttClient;
 
 /*
