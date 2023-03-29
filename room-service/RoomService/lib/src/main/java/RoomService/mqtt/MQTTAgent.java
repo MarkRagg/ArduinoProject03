@@ -32,6 +32,7 @@ public class MQTTAgent extends AbstractVerticle {
 				  System.out.println("There are new message in topic: " + s.topicName());
 				  
 				  if(s.topicName().equals(Topics.LIGHT.getName())) {
+				      System.out.println(s.payload());
 					  MQTTMsg light = msgToEsp.fromJson(s.payload().toString(), MQTTMsg.class);
 					  light.setMsgDate(LocalDateTime.now().getHour());
 					  RoomState.getInstance().getLightStateHistory().add(light);

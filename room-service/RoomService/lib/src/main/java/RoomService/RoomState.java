@@ -2,6 +2,7 @@ package RoomService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import RoomService.mqtt.MQTTMovement;
 import RoomService.mqtt.MQTTMsg;
@@ -29,15 +30,21 @@ public class RoomState {
 		return lightStateHistory;
 	}
 	
-	public synchronized MQTTMsg getLastLightState() {
-		return lightStateHistory.get(lightStateHistory.size());
+	public synchronized Optional<MQTTMsg> getLastLightState() {
+	    if(lightStateHistory.size() == 0) {
+	        return Optional.empty();
+	    }
+	    return Optional.of(lightStateHistory.get(lightStateHistory.size() - 1));
 	}
 
 	public synchronized List<MQTTMovement> getMovementStateHistory() {
 		return movementStateHistory;
 	}	
 	
-	public synchronized MQTTMovement getLastMovementState() {
-		return movementStateHistory.get(movementStateHistory.size());
+	public synchronized Optional<MQTTMovement> getLastMovementState() {
+       if(movementStateHistory.size() == 0) {
+           return Optional.empty();
+       }
+		return Optional.of(movementStateHistory.get(movementStateHistory.size() - 1));
 	}
 }

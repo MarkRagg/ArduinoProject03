@@ -1,5 +1,7 @@
 package RoomService;
 
+import java.util.Optional;
+
 import com.google.gson.Gson;
 import RoomService.http.RoomResource;
 import RoomService.mqtt.MQTTAgent;
@@ -21,7 +23,7 @@ public class RunService {
 		MQTTAgent agent = new MQTTAgent();
 		vertxMqtt.deployVerticle(agent);
 		
-		final String portName = "COM3";
+		final String portName = "COM4";
 		Gson msgToArduino = new Gson();
 		System.out.println("Start monitoring serial port "+portName+" at 9600 boud rate");
 		try {
@@ -30,16 +32,26 @@ public class RunService {
 				@Override
 				public void run() {
 					while(true) {
-						System.out.println(RoomState.getInstance().getLightStateHistory().toString());
-						MQTTMsg light =  RoomState.getInstance().getLastLightState();
-						MQTTMovement movement = RoomState.getInstance().getLastMovementState();
-						SerialCommunication packet = new SerialCommunication(light.getDay(), movement.getMovementState(), false, light.getMsgDate(), 0, true);
-						try {
-							monitor.sendMsg(msgToArduino.toJson(packet));
-							Thread.sleep(1000);
-						} catch (InterruptedException e) {
-							e.printStackTrace();
-						}
+                        Optional<MQTTMsg> light =  RoomState.getInstance().getLastLightState();
+                        Optional<MQTTMovement> movement = RoomState.getInstance().getLastMovementState();
+					    if(light.isPresent() && movement.isPresent()) {
+    						System.out.println(RoomState.getInstance().getLightStateHistory().toString());
+    						SerialCommunication packet = new SerialCommunication(
+    						            light.get().getDay(), movement.get().getMovementState(), false, light.get().getMsgDate(), 0, true
+    						        );
+    						try {
+    							monitor.sendMsg(msgToArduino.toJson(packet));
+    							Thread.sleep(1000);
+    						} catch (InterruptedException e) {
+    							e.printStackTrace();
+    						}
+					    } else {
+					        try {
+                                Thread.sleep(1000);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+					    }
 					}
 				}
 			};
