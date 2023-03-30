@@ -111,21 +111,24 @@ void loop() {
   client.loop();
 
   unsigned long now = millis();
-  StaticJsonDocument<56> doc;
+  StaticJsonDocument<56> dayJson;
+  StaticJsonDocument<56> movementJson;
 
   if (now - lastMsgTime > 10000) {
     lastMsgTime = now;
 
     /* creating a msg in the buffer */
-    snprintf (msg1, MSG_BUFFER_SIZE, "Day: %d", day);
+    snprintf (msg1, MSG_BUFFER_SIZE, "Light: %d", day);
     snprintf (msg2, MSG_BUFFER_SIZE, "Movement: %d", movement);
 
     Serial.println(String("Publishing message: ") + msg1);
     Serial.println(String("Publishing message: ") + msg2);
 
-    doc["day"] = day;
+    dayJson["day"] = day;
+    movementJson["movement"] = movement;
 
-    serializeJson(doc, msg1);
+    serializeJson(dayJson, msg1);
+    serializeJson(movementJson, msg2);
 
     /* publishing the msg */
     client.publish(topic1, msg1);  

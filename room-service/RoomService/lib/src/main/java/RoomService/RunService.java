@@ -23,7 +23,7 @@ public class RunService {
 		MQTTAgent agent = new MQTTAgent();
 		vertxMqtt.deployVerticle(agent);
 		
-		final String portName = "COM4";
+		final String portName = "COM3";
 		Gson msgToArduino = new Gson();
 		System.out.println("Start monitoring serial port "+portName+" at 9600 boud rate");
 		try {
@@ -35,7 +35,6 @@ public class RunService {
                         Optional<MQTTMsg> light =  RoomState.getInstance().getLastLightState();
                         Optional<MQTTMovement> movement = RoomState.getInstance().getLastMovementState();
 					    if(light.isPresent() && movement.isPresent()) {
-    						System.out.println(RoomState.getInstance().getLightStateHistory().toString());
     						SerialCommunication packet = new SerialCommunication(
     						            light.get().getDay(), movement.get().getMovementState(), false, light.get().getMsgDate(), 0, true
     						        );
@@ -63,7 +62,7 @@ public class RunService {
 							if(monitor.isMsgAvailable()) {
 								String msg;
 								msg = monitor.receiveMsg();
-								System.out.println(msg);
+								System.out.println("New Msg available: " + msg);
 							}
 							Thread.sleep(1000);
 						} catch (Exception e) {
