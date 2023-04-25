@@ -1,3 +1,17 @@
+
+.row {
+    margin-bottom: 5vh;
+}
+
+.col {
+    display: inline;
+    margin-right: 2vh;
+}
+
+section {
+    text-align: center;
+}
+
 h1 {
     text-align: center;
     margin-bottom: 5%;

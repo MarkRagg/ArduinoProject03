@@ -1,6 +1,23 @@
 
 const BASE_PATH = "http://localhost:3030"
 
+document.addEventListener("DOMContentLoaded", () => {
+    document.getElementById("controllerForm").addEventListener("submit", e => {
+        e.preventDefault()
+
+        const formData = new FormData()
+        formData.append("light", document.getElementById("chkLight").checked ? true : false)
+        formData.append("movement", document.getElementById("sliderAngle").value)
+
+        fetch(BASE_PATH + "/api/room", {
+            mode: "cors", 
+            method: "post",
+            body: JSON.stringify(Object.fromEntries(formData))
+        })
+
+    })
+})
+
 fetch(BASE_PATH + "/api/room", {mode: 'cors'}).then(res => res.json())
     .then((data) => {
         const ctxMovement = document.getElementById('roomDataChartMovement');
