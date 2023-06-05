@@ -3,6 +3,7 @@
 void SerialTask::init(int period) {
   Task::init(period);
   MsgService.init();
+  //MsgServiceBT.init();
 }
 
 void SerialTask::tick() {
