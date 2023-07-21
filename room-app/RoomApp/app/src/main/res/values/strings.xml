@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">RoomApp</string>
+    <string name="altezza_tenda">Altezza tenda</string>
+    <string name="off">OFF</string>
+    <string name="luci_led">Luci led</string>
+    <string name="on">ON</string>
+</resources>
