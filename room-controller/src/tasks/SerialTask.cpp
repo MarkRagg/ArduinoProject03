@@ -13,6 +13,8 @@ void SerialTask::tick() {
     StaticJsonDocument<56> body;
     StaticJsonDocument<56> data;
     deserializeJson(body, msg->getContent());
+    is_light = body["light"];
+    data["light"] = body["light"];
     is_day = body["day"];
     data["day"] = body["day"];
     data["movement"] = body["movement"];

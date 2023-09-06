@@ -4,6 +4,7 @@
 #include "Task.h"
 #include "../devices/ServoMotor.h"
 
+extern bool is_light;
 extern bool is_day;
 extern bool movement_rel;
 extern int rollerBlindsOpening;

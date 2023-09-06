@@ -1,7 +1,7 @@
 #include <Arduino.h>
 #include "scheduler/Scheduler.h"
 // #include "tasks/SerialCommunication.h"
-#include "tasks/MsgService.h"
+//#include "tasks/MsgService.h"
 #include "tasks/BlinkTask.h"
 #include "tasks/SerialTask.h"
 #include "tasks/BtTask.h"

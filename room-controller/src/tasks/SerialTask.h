@@ -3,9 +3,10 @@
 
 #include "Task.h"
 #include "tasks/MsgService.h"
-#include "tasks/MsgServiceBT.h"
+//#include "tasks/MsgServiceBT.h"
 #include <ArduinoJson.h>
 
+extern bool is_light;
 extern bool is_day;
 extern bool movement_rel;
 extern int rollerBlindsOpening;

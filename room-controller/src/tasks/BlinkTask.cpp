@@ -20,7 +20,11 @@ void BlinkTask::tick(){
     break;
     
     case MANUAL:
-      
+      if(is_light) {
+        led->switchOn();
+      } else {
+        led->switchOff();
+      }
     break;
   }
 }

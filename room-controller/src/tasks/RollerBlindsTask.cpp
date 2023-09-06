@@ -1,5 +1,6 @@
 #include "RollerBlindsTask.h"
 
+bool is_light;
 bool is_day;
 bool movement_rel;
 int rollerBlindsOpening;
@@ -30,6 +31,7 @@ void RollerBlindsTask::tick(){
     break;
 
     case MANUAL:
+      servo->move(rollerBlindsOpening);
     break;
   }
 }
