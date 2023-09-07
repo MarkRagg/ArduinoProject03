@@ -3,7 +3,6 @@
 
 #include "Task.h"
 #include "tasks/MsgService.h"
-//#include "tasks/MsgServiceBT.h"
 #include <ArduinoJson.h>
 
 extern bool is_light;
@@ -19,7 +18,6 @@ public:
 private:
   int baudrate;
   MsgServiceClass MsgService;
-  //MsgServiceBTClass MsgServiceBT;
   String str;
 };
 

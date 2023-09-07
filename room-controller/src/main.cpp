@@ -1,6 +1,5 @@
 #include <Arduino.h>
 #include "scheduler/Scheduler.h"
-// #include "tasks/SerialCommunication.h"
 //#include "tasks/MsgService.h"
 #include "tasks/BlinkTask.h"
 #include "tasks/SerialTask.h"
@@ -21,26 +20,25 @@ Led* led = new Led(5);
 
 // String str;
 // MsgServiceClass MsgService;
-//Task* blinking = new BlinkTask(13);
-//Task* serial = new SerialTask();
-Task* bt = new BtTask(3, 2, 5, 10);
+Task* blinking = new BlinkTask(13);
+Task* serial = new SerialTask();
+Task* bt = new BtTask(3, 2, 5, 9);
 
 void setup() {
   sched.init(200);
 
-  // Task* serial = new SerialCommunication();
    Serial.begin(9600);
   // Serial.setTimeout(1);
   // serial->init(500);
 
   // sched.addTask(serial);  
   
-  //serial->init(1000);
-  //blinking->init(200);
+  blinking->init(200);
+  serial->init(1000);
   bt->init(200);
 
-  // sched.addTask(blinking);
-  // sched.addTask(serial);
+  sched.addTask(blinking);
+  sched.addTask(serial);
   sched.addTask(bt);
 
   // doc["b"] = test1;

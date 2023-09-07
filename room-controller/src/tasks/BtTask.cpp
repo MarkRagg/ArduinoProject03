@@ -10,12 +10,13 @@ BtTask::BtTask(int rxPin, int txPin, int ledPin, int servoPin){
 
 void BtTask::init(int period){
     Task::init(period);
+    servoMotor->on();
     channel = new SoftwareSerial(rxPin, txPin);
     channel->begin(9600);
 }
 
 void BtTask::tick(){
-    Serial.print(".");
+    // Serial.print(".");
 
     /*
         Chek if there is data transmitted via BT in the Serial channel,
@@ -34,13 +35,17 @@ void BtTask::tick(){
         StaticJsonDocument<56> doc;
         deserializeJson(doc, BT_input);
 
-        Serial.println(BT_input);
+        int angle = (int)(doc["State"]);
+
+        // Serial.println(BT_input);
         if(doc["State"] == "ON") {
             led->switchOn();
         } else if (doc["State"] == "OFF") {
             led->switchOff();
-        } else if ((int(doc["State"]) >= 0 ) && (int(doc["State"]) <= 100)) {
-            servoMotor->move(int(doc["State"]));
+        } else if ((angle >= 0 ) && (angle <= 100)) {
+            angle = map(angle, 0, 100, 0, 180);
+            Serial.println(angle);
+            servoMotor->move(angle);
         }
 
     }
