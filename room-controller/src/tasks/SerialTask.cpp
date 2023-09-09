@@ -13,15 +13,12 @@ void SerialTask::init(int period) {
 void SerialTask::tick() {
   MsgService.serialEvent();
 
-  // Serial.println("MESSAGGIO? "+MsgService.isMsgAvailable());
-
   if (MsgService.isMsgAvailable()) {
     Msg* msg = MsgService.receiveMsg(); 
     StaticJsonDocument<56> body;
     StaticJsonDocument<56> data;
 
     deserializeJson(body, msg->getContent());
-    // Serial.println(body["movement"]);
     
     is_light = body["light"];
     data["light"] = body["lightOn"];
@@ -37,13 +34,6 @@ void SerialTask::tick() {
 
     serializeJson(body, Serial);
     Serial.println("");
-
-    // Serial.println("MOVEMENT "+ movement_rel);
-    // Serial.println(movement_rel);
-
-    // day = body["day"];
-    // movement = body["movement"];
-    // rollerBlindsOpening = body["angle"];
 
     /* NOT TO FORGET: message deallocation */
     delete msg;

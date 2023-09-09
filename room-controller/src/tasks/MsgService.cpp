@@ -32,10 +32,6 @@ void MsgServiceClass::sendMsg(const String& msg){
   Serial.println(msg);  
 }
 
-// void MsgServiceClass::sendMsg(const Msg& msg){
-//   Serial.println(msg.getContent());  
-// }
-
 void MsgServiceClass::serialEvent() {
   /* reading the content */
   while (Serial.available()) {

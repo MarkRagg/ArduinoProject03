@@ -15,7 +15,6 @@ void BtTask::init(int period){
 }
 
 void BtTask::tick(){
-    // Serial.print(".");
     /*
         Chek if there is data transmitted via BT in the Serial channel,
         then read character by character until the end of the message.
@@ -35,14 +34,12 @@ void BtTask::tick(){
 
         int angle = (int)(doc["State"]);
 
-        // Serial.println(BT_input);
         if(doc["State"] == "ON") {
             led->switchOn();
         } else if (doc["State"] == "OFF") {
             led->switchOff();
         } else if ((angle >= 0 ) && (angle <= 100)) {
             angle = map(angle, 0, 100, 0, 180);
-            Serial.println(angle);
             servo->move(angle);
         }
 
