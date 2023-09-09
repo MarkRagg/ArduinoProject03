@@ -17,11 +17,9 @@ void impl::moveDetectorTask(void* parameter) {
 
   for(;;) {
     if(pir->isDetected()) {
-      //Serial.println("Detected!");
       green_led->switchOn();
       movement = true;
     } else {
-      //Serial.println("Not Detected!");
       green_led->switchOff();
       movement = false;
     }
