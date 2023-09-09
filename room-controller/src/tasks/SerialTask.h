@@ -10,6 +10,7 @@ extern bool is_light;
 extern bool is_day;
 extern bool movement_rel;
 extern int rollerBlindsOpening;
+extern bool automatic;
 
 class SerialTask: public Task {
 public:

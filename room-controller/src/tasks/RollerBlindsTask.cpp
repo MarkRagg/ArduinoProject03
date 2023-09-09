@@ -10,6 +10,11 @@ void RollerBlindsTask::init(int period){
 }
   
 void RollerBlindsTask::tick(){
+  if(automatic) {
+    rollerBlindsState = UP
+  } else {
+    rollerBlindsState = MANUAL;
+  }
   switch (rollerBlindsState){
     case UP:
       servo->move(10);

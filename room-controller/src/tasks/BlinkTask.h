@@ -13,7 +13,7 @@ public:
 
 private:
   Led* led;
-  enum { AUTO, MANUAL} ledState;
+  enum { MANUAL, AUTO} ledState;
 };
 
 #endif
