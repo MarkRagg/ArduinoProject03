@@ -14,7 +14,9 @@ void ServoMotor::on() {
 }
 
 void ServoMotor::move(int angle) {
-  motor.write(angle);  
+  if(readAngle() != angle){
+    motor.write(angle);
+  }
 }
 
 int ServoMotor::readAngle() {

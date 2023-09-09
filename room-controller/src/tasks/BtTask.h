@@ -10,7 +10,7 @@
 class BtTask: public Task {
 
 public:
-    BtTask(int rxPin, int txPin, int ledPin, int servoPin);
+    BtTask(int rxPin, int txPin, int ledPin, ServoMotor* servoMotor);
     void init(int period);
     void tick();
 
@@ -20,7 +20,7 @@ private:
     String BT_input;                    // to store the complete message received via BT.
     char msgChar;                       // to store input character received via BT.
     Led* led;                           // the led to turn on/off.
-    ServoMotor* servoMotor;             // the servoMotor to move.
+    ServoMotor* servo;                  // the servoMotor to move.
     SoftwareSerial* channel;            // the channel where to read the data transmitted via BT.
 };
 

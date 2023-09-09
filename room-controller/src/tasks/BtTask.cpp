@@ -1,23 +1,21 @@
 #include "BtTask.h"
 #include <ArduinoJson.h>
 
-BtTask::BtTask(int rxPin, int txPin, int ledPin, int servoPin){
+BtTask::BtTask(int rxPin, int txPin, int ledPin, ServoMotor* servoMotor){
     this->rxPin = rxPin;
     this->txPin = txPin;
     this->led = new Led(ledPin); 
-    this->servoMotor = new ServoMotor(servoPin);
+    this->servo = servoMotor;
 }
 
 void BtTask::init(int period){
     Task::init(period);
-    servoMotor->on();
     channel = new SoftwareSerial(rxPin, txPin);
     channel->begin(9600);
 }
 
 void BtTask::tick(){
     // Serial.print(".");
-
     /*
         Chek if there is data transmitted via BT in the Serial channel,
         then read character by character until the end of the message.
@@ -45,7 +43,7 @@ void BtTask::tick(){
         } else if ((angle >= 0 ) && (angle <= 100)) {
             angle = map(angle, 0, 100, 0, 180);
             Serial.println(angle);
-            servoMotor->move(angle);
+            servo->move(angle);
         }
 
     }

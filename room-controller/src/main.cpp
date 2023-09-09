@@ -1,51 +1,38 @@
 #include <Arduino.h>
+#include <ArduinoJson.h>
 #include "scheduler/Scheduler.h"
-//#include "tasks/MsgService.h"
+#include "tasks/MsgService.h"
+#include "tasks/RollerBlindsTask.h"
 #include "tasks/BlinkTask.h"
 #include "tasks/SerialTask.h"
 #include "tasks/BtTask.h"
-#include <ArduinoJson.h>
-
-#include "devices/Led.h"
-
+#include "devices/ServoMotor.h"
 
 Scheduler sched;
-// bool day = true;
-// bool movement = false;
-// bool manual = false;
-// int rollerBlindsOpening = 0;
-Led* led = new Led(5); 
-// int test1 = 1;
-// int test2 = 2;
+ServoMotor* servoMotor = new ServoMotor(9);
 
-// String str;
-// MsgServiceClass MsgService;
-Task* blinking = new BlinkTask(13);
+Task* rollerBlinds = new RollerBlindsTask(servoMotor);
+Task* blinking = new BlinkTask(5);
 Task* serial = new SerialTask();
-Task* bt = new BtTask(3, 2, 5, 9);
+Task* bt = new BtTask(3, 2, 5, servoMotor);
 
 void setup() {
+  servoMotor->on();
+
   sched.init(200);
 
-   Serial.begin(9600);
-  // Serial.setTimeout(1);
-  // serial->init(500);
-
-  // sched.addTask(serial);  
-  
+  Serial.begin(9600);
+ 
+  rollerBlinds->init(500);
   blinking->init(200);
   serial->init(1000);
   bt->init(200);
 
   sched.addTask(blinking);
   sched.addTask(serial);
+  sched.addTask(rollerBlinds);
   sched.addTask(bt);
 
-  // doc["b"] = test1;
-  // doc["a"] = test2;
-  // serializeJson(doc, str);
-
-  // MsgService.init();
 }
 
 void loop() {

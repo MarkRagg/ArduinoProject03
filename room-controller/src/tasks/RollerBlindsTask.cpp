@@ -1,12 +1,7 @@
 #include "RollerBlindsTask.h"
 
-bool is_light;
-bool is_day;
-bool movement_rel;
-int rollerBlindsOpening;
-
-RollerBlindsTask::RollerBlindsTask(int pin){
-  this->servo = new ServoMotor(pin); 
+RollerBlindsTask::RollerBlindsTask(ServoMotor* servoMotor){
+  this->servo = servoMotor;
 }
   
 void RollerBlindsTask::init(int period){
@@ -17,14 +12,14 @@ void RollerBlindsTask::init(int period){
 void RollerBlindsTask::tick(){
   switch (rollerBlindsState){
     case UP:
-      servo->move(0);
+      servo->move(10);
       if(!is_day && !movement_rel) {
         rollerBlindsState = DOWN;
       }
     break;
     
     case DOWN:
-      servo->move(180);    
+      servo->move(170);    
       if(is_day && movement_rel) {
         rollerBlindsState = UP;
       }

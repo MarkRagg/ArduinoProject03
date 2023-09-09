@@ -3,15 +3,11 @@
 
 #include "Task.h"
 #include "../devices/ServoMotor.h"
-
-extern bool is_light;
-extern bool is_day;
-extern bool movement_rel;
-extern int rollerBlindsOpening;
+#include "SerialTask.h"
 
 class RollerBlindsTask: public Task {
 public:
-  RollerBlindsTask(int pin);
+  RollerBlindsTask(ServoMotor* servoMotor);
   void init(int period);
   void tick();
 
