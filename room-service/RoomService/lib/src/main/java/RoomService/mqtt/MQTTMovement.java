@@ -2,18 +2,18 @@ package RoomService.mqtt;
 
 public class MQTTMovement {
 
-	private boolean movementState;
+	private boolean movement;
 
-	public MQTTMovement(final boolean movementState) {
+	public MQTTMovement(final boolean movement) {
 		super();
-		this.movementState = movementState;
+		this.movement = movement;
 	}
 
 	public boolean getMovementState() {
-		return movementState;
+		return movement;
 	}
 
-	public void setMovementState(final boolean movementState) {
-		this.movementState = movementState;
+	public void setMovementState(final boolean movement) {
+		this.movement = movement;
 	}
 }
