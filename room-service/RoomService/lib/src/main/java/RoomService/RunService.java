@@ -1,6 +1,8 @@
 package RoomService;
 
 import java.util.Optional;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import com.google.gson.Gson;
 
@@ -15,6 +17,8 @@ import RoomService.serial.SerialCommunication;
 import io.vertx.core.Vertx;
 
 public class RunService {
+	
+	private static boolean automatic = true;
 
     public static void main(String[] args) {
         Vertx vertxHttp = Vertx.vertx();
@@ -27,6 +31,8 @@ public class RunService {
 
         final String portName = "COM3";
         System.out.println("Start monitoring serial port " + portName + " at 9600 boud rate");
+        
+        Timer timer = new Timer();
 
         try {
             final CommChannel arduinoChannel = new SerialCommChannel(portName, 9600);
@@ -38,11 +44,23 @@ public class RunService {
                     Optional<DashboardMessage> dashboardMsg = RoomState.getInstance().getLastDashboardMessage();
 
                     if (dashboardMsg.isPresent()) {
+                    	if(getAutomatic()) {
+	                    	setAutomatic(false);
+	                    	timer.schedule(new TimerTask() {
+		            		    @Override
+		            		    public void run() {
+		            			    setAutomatic(true);
+		            			    //timer.cancel();
+		            		    }
+                    		}, 10000);
+                    	}
                     	sendMessage(new SerialCommunication(false, false, dashboardMsg.get().isLight(), 0,
                     			dashboardMsg.get().getAngle(), false), arduinoChannel);
                     } else if (light.isPresent() && movement.isPresent()) {
-                    	sendMessage(new SerialCommunication(light.get().getDay(), movement.get().getMovementState(),
-                    			false, light.get().getMsgDate(), 0, true), arduinoChannel);
+                    	if(getAutomatic()) {
+	                    	sendMessage(new SerialCommunication(light.get().getDay(), movement.get().getMovementState(),
+	                    			false, light.get().getMsgDate(), 0, true), arduinoChannel);
+                    	}
                     } else {
                         try {
                             Thread.sleep(1000);
@@ -82,5 +100,13 @@ public class RunService {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
+    
+    public static synchronized boolean getAutomatic() {
+        return automatic;
+    }
+    
+    public static synchronized void setAutomatic(boolean value) {
+    	automatic = value;
     }
 }
