@@ -10,11 +10,6 @@ void BlinkTask::init(int period){
 }
   
 void BlinkTask::tick(){
-  if(automatic) {
-    ledState = AUTO;
-  } else {
-    ledState = MANUAL;
-  }
   switch (ledState){
     case AUTO:
       if(movement_rel && !is_day) {
