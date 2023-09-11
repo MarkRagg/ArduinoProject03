@@ -32,6 +32,9 @@ void SerialTask::tick() {
     rollerBlindsOpening = body["rollerBlindsAngle"];
     data["rollerBlindsAngle"] = body["rollerBlindsAngle"];
 
+    automatic = body["automatic"];
+    data["automatic"] = body["automatic"];
+
     serializeJson(body, Serial);
     Serial.println("");
 
