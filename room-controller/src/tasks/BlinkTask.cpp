@@ -15,6 +15,7 @@ void BlinkTask::tick(){
   } else {
     ledState = MANUAL;
   }
+
   switch (ledState){
     case AUTO:
       if(movement_rel && !is_day) {
