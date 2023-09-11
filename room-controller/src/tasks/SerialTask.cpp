@@ -23,7 +23,7 @@ void SerialTask::tick() {
     automatic = body["automatic"];
     data["automatic"] = body["automatic"];
     
-    is_light = body["light"];
+    is_light = body["lightOn"];
     data["light"] = body["lightOn"];
 
     is_day = body["day"];
