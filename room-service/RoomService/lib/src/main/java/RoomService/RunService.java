@@ -37,12 +37,12 @@ public class RunService {
                     Optional<MQTTMovement> movement = RoomState.getInstance().getLastMovementState();
                     Optional<DashboardMessage> dashboardMsg = RoomState.getInstance().getLastDashboardMessage();
 
-                    if (light.isPresent() && movement.isPresent()) {
-                        sendMessage(new SerialCommunication(light.get().getDay(), movement.get().getMovementState(),
-                                false, light.get().getMsgDate(), 0, true), arduinoChannel);
-                    } else if (dashboardMsg.isPresent()) {
-                        sendMessage(new SerialCommunication(false, false, dashboardMsg.get().isLight(), 0,
-                                dashboardMsg.get().getAngle(), false), arduinoChannel);
+                    if (dashboardMsg.isPresent()) {
+                    	sendMessage(new SerialCommunication(false, false, dashboardMsg.get().isLight(), 0,
+                    			dashboardMsg.get().getAngle(), false), arduinoChannel);
+                    } else if (light.isPresent() && movement.isPresent()) {
+                    	sendMessage(new SerialCommunication(light.get().getDay(), movement.get().getMovementState(),
+                    			false, light.get().getMsgDate(), 0, true), arduinoChannel);
                     } else {
                         try {
                             Thread.sleep(1000);

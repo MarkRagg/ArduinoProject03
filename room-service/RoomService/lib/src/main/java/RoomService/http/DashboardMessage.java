@@ -10,7 +10,7 @@ public class DashboardMessage {
         this.angle = angle;
     }
 
-    public boolean isLight() {
+	public boolean isLight() {
         return light;
     }
 
@@ -18,4 +18,8 @@ public class DashboardMessage {
         return angle;
     }
 
+    @Override
+    public String toString() {
+    	return "DashboardMessage [light=" + light + ", angle=" + angle + "]";
+    }
 }

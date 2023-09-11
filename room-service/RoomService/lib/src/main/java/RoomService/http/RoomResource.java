@@ -42,7 +42,7 @@ public class RoomResource extends AbstractVerticle {
 	private void handlePostResource(final RoutingContext routingContext) {
 	    routingContext.request().bodyHandler(bodyHandler -> {
 	        var body = bodyHandler.toJsonObject();
-	        RoomState.getInstance().addDashboardMessage(new DashboardMessage(Boolean.getBoolean(body.getString("light")),
+	        RoomState.getInstance().addDashboardMessage(new DashboardMessage(Boolean.parseBoolean(body.getString("light")),
 	                    Integer.parseInt(body.getString("movement"))));
 	    });
 	    routingContext.response()
