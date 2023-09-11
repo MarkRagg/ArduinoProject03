@@ -45,6 +45,9 @@ public class RoomResource extends AbstractVerticle {
 	        RoomState.getInstance().addDashboardMessage(new DashboardMessage(Boolean.getBoolean(body.getString("light")),
 	                    Integer.parseInt(body.getString("movement"))));
 	    });
+	    routingContext.response()
+    	        .putHeader("content-type", "application/json")
+                .end(new JsonObject().encodePrettily());
 	}
 
 	private void log(final String msg) {
