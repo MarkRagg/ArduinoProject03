@@ -4,25 +4,25 @@ import java.time.LocalDateTime;
 
 public class MQTTMsg {
 
-	private int hoursDate;
+	private String dateTime;
 	private boolean day;
-	
+
 	public MQTTMsg(final boolean day) {
 		super();
-		this.hoursDate = LocalDateTime.now().getHour();
+		this.dateTime = LocalDateTime.now().toString();
 		this.day = day;
 	}
 
-	public int getMsgDate() {
-		return hoursDate;
+	public String getMsgDate() {
+		return this.dateTime;
 	}
 
 	public boolean getDay() {
 		return day;
 	}
 
-	public void setMsgDate(int hoursDate) {
-		this.hoursDate = hoursDate;
+	public void setMsgDate(final String dateTime) {
+		this.dateTime = dateTime;
 	}
 
 	public void setDay(boolean day) {
@@ -31,6 +31,6 @@ public class MQTTMsg {
 
 	@Override
 	public String toString() {
-		return "MQTTMsg [msgDate=" + this.hoursDate + ", day=" + this.day + "]";
+		return "MQTTMsg [msgDate=" + this.dateTime + ", day=" + this.day + "]";
 	}
 }

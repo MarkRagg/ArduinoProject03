@@ -29,7 +29,7 @@ fetch(BASE_PATH + "/api/room", {mode: 'cors'}).then(res => res.json())
 
 const plotDataHistory = (data, ctx, label) => {
 
-    const xValues = data.map(x => new Date(x.key).toLocaleString())
+    const xValues = data.map(x => new Date(x.date).toLocaleString())
     const yValues = data.map(y => y.value)
 
     new Chart(ctx, {

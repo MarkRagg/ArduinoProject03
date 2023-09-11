@@ -31,8 +31,10 @@ public class RoomResource extends AbstractVerticle {
 
 	private void handleGetResource(final RoutingContext routingContext) {
 		JsonObject res = new JsonObject();
-		res.put("light", RoomState.getInstance().getLightStateHistory());
-		res.put("movement", RoomState.getInstance().getMovementStateHistory());
+		res.put("light", RoomState.getInstance().getLightStateHistory().stream()
+		        .map(msg -> new ResponseData(msg.getMsgDate(), msg.getDay())));
+		res.put("movement", RoomState.getInstance().getMovementStateHistory().stream()
+		        .map(msg -> new ResponseData(msg.getDateTime(), msg.getMovementState())));
 
 		routingContext.response()
 			.putHeader("content-type", "application/json")
@@ -52,6 +54,18 @@ public class RoomResource extends AbstractVerticle {
 
 	private void log(final String msg) {
 		System.out.println("[ROOM RESOURCE] "+msg);
+	}
+
+	private final class ResponseData {
+	    @SuppressWarnings("unused")
+            private final String date;
+    	    @SuppressWarnings("unused")
+            private final boolean value;
+
+	    public ResponseData(final String date, final boolean value) {
+	        this.date = date;
+	        this.value = value;
+	    }
 	}
 
 }
