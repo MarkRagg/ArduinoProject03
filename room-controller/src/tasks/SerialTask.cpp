@@ -4,6 +4,7 @@ bool is_light;
 bool is_day;
 bool movement_rel;
 int rollerBlindsOpening;
+bool automatic;
 
 void SerialTask::init(int period) {
   Task::init(period);
@@ -15,10 +16,12 @@ void SerialTask::tick() {
 
   if (MsgService.isMsgAvailable()) {
     Msg* msg = MsgService.receiveMsg(); 
-    StaticJsonDocument<56> body;
-    StaticJsonDocument<56> data;
+    StaticJsonDocument<112> body;
+    StaticJsonDocument<112> data;
 
     deserializeJson(body, msg->getContent());
+    automatic = body["automatic"];
+    data["automatic"] = body["automatic"];
     
     is_light = body["light"];
     data["light"] = body["lightOn"];
@@ -32,10 +35,7 @@ void SerialTask::tick() {
     rollerBlindsOpening = body["rollerBlindsAngle"];
     data["rollerBlindsAngle"] = body["rollerBlindsAngle"];
 
-    automatic = body["automatic"];
-    data["automatic"] = body["automatic"];
-
-    serializeJson(body, Serial);
+    serializeJson(data, Serial);
     Serial.println("");
 
     /* NOT TO FORGET: message deallocation */

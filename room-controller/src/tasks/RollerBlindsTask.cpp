@@ -6,28 +6,22 @@ RollerBlindsTask::RollerBlindsTask(ServoMotor* servoMotor){
   
 void RollerBlindsTask::init(int period){
   Task::init(period);
-  rollerBlindsState = UP;
+  rollerBlindsState = AUTO;
 }
   
 void RollerBlindsTask::tick(){
-    if(automatic) {
-    rollerBlindsState = UP
+  if(automatic) {
+    rollerBlindsState = AUTO;
   } else {
     rollerBlindsState = MANUAL;
   }
   
   switch (rollerBlindsState){
-    case UP:
-      servo->move(10);
+    case AUTO:
       if(!is_day && !movement_rel) {
-        rollerBlindsState = DOWN;
-      }
-    break;
-    
-    case DOWN:
-      servo->move(170);    
-      if(is_day && movement_rel) {
-        rollerBlindsState = UP;
+        servo->move(0);
+      } else if(is_day && movement_rel) {
+        servo->move(180);    
       }
     break;
 

@@ -13,7 +13,7 @@ public:
 
 private:
   ServoMotor* servo;
-  enum { UP, DOWN, MANUAL} rollerBlindsState;
+  enum { AUTO, MANUAL} rollerBlindsState;
 };
 
 #endif
