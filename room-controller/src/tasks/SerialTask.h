@@ -7,6 +7,7 @@
 // #include "RollerBlindsTask.h"
 
 extern bool is_light;
+extern bool light_on;
 extern bool is_day;
 extern bool movement_rel;
 extern int rollerBlindsOpening;

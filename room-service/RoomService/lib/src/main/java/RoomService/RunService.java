@@ -19,6 +19,7 @@ import io.vertx.core.Vertx;
 public class RunService {
 
 	private static boolean automatic = true;
+	private static SerialCommunication lastAutomaticMessage;	
 
     public static void main(String[] args) {
         Vertx vertxHttp = Vertx.vertx();
@@ -41,26 +42,25 @@ public class RunService {
 
                     Optional<MQTTMsg> light = RoomState.getInstance().getLastLightState();
                     Optional<MQTTMovement> movement = RoomState.getInstance().getLastMovementState();
-                    Optional<DashboardMessage> dashboardMsg = RoomState.getInstance().getLastDashboardMessage();
-
+                    Optional<DashboardMessage> dashboardMsg = RoomState.getInstance().getLastDashboardMessage();                    
+                    
                     if (dashboardMsg.isPresent()) {
-                    	if(getAutomatic()) {
-	                    	setAutomatic(false);
-	                    	timer.schedule(new TimerTask() {
-		            		    @Override
-		            		    public void run() {
-		            			    setAutomatic(true);
-		            			    //timer.cancel();
-		            		    }
-                    		}, 10000);
-                    	}
-                    	sendMessage(new SerialCommunication(false, false, dashboardMsg.get().isLight(),
-                    			dashboardMsg.get().getAngle(), false), arduinoChannel);
+                    	setAutomatic(false);
+                    	lastAutomaticMessage = new SerialCommunication(false, false,
+                    			dashboardMsg.get().isLight(), dashboardMsg.get().getAngle(), false);
+                    	
+                    	timer.schedule(new TimerTask() {
+	            		    @Override
+	            		    public void run() {
+	            			    setAutomatic(true);
+	            		    }
+                		}, 10000);
+                    	sendMessage(lastAutomaticMessage, arduinoChannel);
+                    } else if(!getAutomatic()) {
+                    	sendMessage(lastAutomaticMessage, arduinoChannel);
                     } else if (light.isPresent() && movement.isPresent()) {
-                    	if(getAutomatic()) {
-	                    	sendMessage(new SerialCommunication(light.get().getDay(), movement.get().getMovementState(),
-	                    			false, 0, true), arduinoChannel);
-                    	}
+                    	sendMessage(new SerialCommunication(light.get().getDay(), movement.get().getMovementState(),
+                    			false, 0, true), arduinoChannel);
                     } else {
                         try {
                             Thread.sleep(1000);
@@ -100,6 +100,7 @@ public class RunService {
 
     private static void sendMessage(final SerialCommunication packet, final CommChannel channel) {
         try {
+        	//System.out.println(packet);
             channel.sendMsg(new Gson().toJson(packet));
             Thread.sleep(1000);
         } catch (InterruptedException e) {

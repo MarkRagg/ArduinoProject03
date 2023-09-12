@@ -20,12 +20,15 @@ void BlinkTask::tick(){
     case AUTO:
       if(movement_rel && !is_day) {
         led->switchOn();
+        light_on = true;
       } else {
         led->switchOff();
+        light_on = false;
       }
     break;
     
     case MANUAL:
+      light_on = is_light;
       if(is_light) {
         led->switchOn();
       } else {

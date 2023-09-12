@@ -1,10 +1,11 @@
 #include "SerialTask.h"
 
-bool is_light;
-bool is_day;
-bool movement_rel;
-int rollerBlindsOpening;
-bool automatic;
+bool is_light = false;
+bool light_on = false;
+bool is_day = false;
+bool movement_rel = false;
+int rollerBlindsOpening = 0;
+bool automatic = true;
 
 void SerialTask::init(int period) {
   Task::init(period);
@@ -21,18 +22,21 @@ void SerialTask::tick() {
 
     deserializeJson(body, msg->getContent());
     automatic = body["automatic"];
-    data["automatic"] = body["automatic"];
     
     is_light = body["lightOn"];
-    data["light"] = body["lightOn"];
+    
 
     is_day = body["day"];
-    data["day"] = body["day"];
+    
 
     movement_rel = body["movement"];
-    data["movement"] = body["movement"];
 
     rollerBlindsOpening = body["rollerBlindsAngle"];
+
+    data["automatic"] = body["automatic"];
+    data["lightOn"] = light_on;
+    data["day"] = body["day"];
+    data["movement"] = body["movement"];
     data["rollerBlindsAngle"] = body["rollerBlindsAngle"];
 
     serializeJson(data, Serial);
