@@ -78,6 +78,8 @@ public class RunService {
                             String msg;
                             msg = arduinoChannel.receiveMsg();
                             System.out.println("New Arduino Msg available: " + msg);
+                            var newLight = new MQTTMsg(Boolean.parseBoolean(msg["lightOn"]));
+                            RoomState.getInstance().getLastLightState().add(newLight);
                         }
                         Thread.sleep(1000);
                     } catch (Exception e) {
