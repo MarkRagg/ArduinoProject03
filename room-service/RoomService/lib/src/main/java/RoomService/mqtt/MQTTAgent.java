@@ -35,7 +35,7 @@ public class MQTTAgent extends AbstractVerticle {
 					  if(s.payload().toString().contains("{") ) {
 						  MQTTMsg light = msgToEsp.fromJson(s.payload().toString(), MQTTMsg.class);
 						  light.setMsgDate(LocalDateTime.now().toString());
-						  RoomState.getInstance().getLightStateHistory().add(light);
+						  RoomState.getInstance().getDayHistory().add(light);
 					  }
 				  } else {
 					  if(s.payload().toString().contains("{") ) {

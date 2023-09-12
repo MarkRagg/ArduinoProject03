@@ -14,14 +14,16 @@ public class RoomState {
 
 	private static RoomState instance = null;
 
+	private List<MQTTMsg> dayHistory;
 	private List<MQTTMsg> lightStateHistory;
 	private List<MQTTMovement> movementStateHistory;
 	private Queue<DashboardMessage> dashboardMessages;
 
 	private RoomState() {
-		this.lightStateHistory = new ArrayList<>();
+		this.dayHistory = new ArrayList<>();
 		this.movementStateHistory = new ArrayList<>();
 		this.dashboardMessages = new ArrayDeque<>();
+		this.lightStateHistory = new ArrayList<>();
 	}
 
 	public static RoomState getInstance() {
@@ -40,14 +42,14 @@ public class RoomState {
         }
 
 	public synchronized List<MQTTMsg> getLightStateHistory() {
-		return lightStateHistory;
+		return this.lightStateHistory;
 	}
 
 	public synchronized Optional<MQTTMsg> getLastLightState() {
-	    if(lightStateHistory.size() == 0) {
+	    if(this.lightStateHistory.size() == 0) {
 	        return Optional.empty();
 	    }
-	    return Optional.of(lightStateHistory.get(lightStateHistory.size() - 1));
+	    return Optional.of(this.lightStateHistory.get(this.lightStateHistory.size() - 1));
 	}
 
 	public synchronized List<MQTTMovement> getMovementStateHistory() {
@@ -60,4 +62,15 @@ public class RoomState {
            }
            return Optional.of(movementStateHistory.get(movementStateHistory.size() - 1));
 	}
+
+	public synchronized Optional<MQTTMsg> getLastDay() {
+            if(dayHistory.size() == 0) {
+                return Optional.empty();
+            }
+            return Optional.of(dayHistory.get(dayHistory.size() - 1));
+        }
+
+        public synchronized List<MQTTMsg> getDayHistory() {
+                return this.dayHistory;
+        }
 }

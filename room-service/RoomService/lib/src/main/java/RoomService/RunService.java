@@ -4,10 +4,9 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import com.google.gson.Gson;
+
 import RoomService.http.DashboardMessage;
 import RoomService.http.RoomResource;
 import RoomService.mqtt.MQTTAgent;
@@ -21,7 +20,8 @@ import io.vertx.core.Vertx;
 public class RunService {
 
 	private static boolean automatic = true;
-	private static SerialCommunication lastAutomaticMessage;	
+	private static boolean isBtActive = false;
+	private static SerialCommunication lastAutomaticMessage;
 
     public static void main(String[] args) {
         Vertx vertxHttp = Vertx.vertx();
@@ -42,21 +42,21 @@ public class RunService {
             final Thread sender = new Thread(() -> {
                 while (true) {
 
-                    Optional<MQTTMsg> light = RoomState.getInstance().getLastLightState();
+                    Optional<MQTTMsg> lastDay = RoomState.getInstance().getLastDay();
                     Optional<MQTTMovement> movement = RoomState.getInstance().getLastMovementState();
-                    Optional<DashboardMessage> dashboardMsg = RoomState.getInstance().getLastDashboardMessage();                    
-                    
+                    Optional<DashboardMessage> dashboardMsg = RoomState.getInstance().getLastDashboardMessage();
+
                     if (dashboardMsg.isPresent()) {
                     	setAutomatic(false);
                     	lastAutomaticMessage = new SerialCommunication(false, false,
                     			dashboardMsg.get().isLight(), dashboardMsg.get().getAngle(), false, false);
-                    	
+
                     	startTimer(timer);
                     	sendMessage(lastAutomaticMessage, arduinoChannel);
                     } else if(!getAutomatic()) {
                     	sendMessage(lastAutomaticMessage, arduinoChannel);
-                    } else if (light.isPresent() && movement.isPresent()) {
-                    	sendMessage(new SerialCommunication(light.get().getDay(), movement.get().getMovementState(),
+                    } else if (lastDay.isPresent() && movement.isPresent()) {
+                    	sendMessage(new SerialCommunication(lastDay.get().getDay(), movement.get().getMovementState(),
                     			false, 0, true, false), arduinoChannel);
                     } else {
                         try {
@@ -75,15 +75,18 @@ public class RunService {
                             String msg;
                             msg = arduinoChannel.receiveMsg();
                             var gson = new Gson().fromJson(msg, SerialCommunication.class);
-                            
+
                             System.out.println("New Arduino Msg available: " + msg);
                             var lightOn = new MQTTMsg(gson.isLightOn());
                             if(!msg.contains("null")) setAutomatic(gson.isAutomatic());
-                            if(gson.isBtCommand()) setAutomatic(false);
-                            if(!getAutomatic()) {
+                            if(gson.isBtCommand()) {
+                                setAutomatic(false);
+                                lastAutomaticMessage = gson;
+                            }
+                            if(!isBtActive && gson.isBtCommand()) {
                             	System.out.println(gson.isLightOn());
-                            	lastAutomaticMessage = gson;
                             	startTimer(timer);
+                            	isBtActive = true;
                             }
                             lightOn.setMsgDate(LocalDateTime.now().toString());
                             RoomState.getInstance().getLightStateHistory().add(lightOn);
