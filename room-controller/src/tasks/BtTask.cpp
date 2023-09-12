@@ -20,7 +20,7 @@ void BtTask::tick(){
         then read character by character until the end of the message.
     */
     curr_millis = millis();
-    if(curr_millis - prev_millis > 5000 && bt_command) {
+    if(curr_millis - prev_millis > 10000 && bt_command) {
         bt_command = false;
         automatic = true;
         prev_millis = curr_millis;

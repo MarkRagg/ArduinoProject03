@@ -78,18 +78,19 @@ public class RunService {
 
                             System.out.println("New Arduino Msg available: " + msg);
                             var lightOn = new MQTTMsg(gson.isLightOn());
-                            if(!msg.contains("null")) setAutomatic(gson.isAutomatic());
-                            if(gson.isBtCommand()) {
-                                setAutomatic(false);
-                                lastAutomaticMessage = gson;
+                            if(!msg.contains("null")) {
+	                            if(gson.isBtCommand()) {
+	                                setAutomatic(false);
+	                                lastAutomaticMessage = gson;
+	                            }
+	                            if(!isBtActive && gson.isBtCommand()) {
+	                            	System.out.println(gson.isLightOn());
+	                            	startTimer(timer);
+	                            	isBtActive = true;
+	                            }
+	                            lightOn.setMsgDate(LocalDateTime.now().toString());
+	                            RoomState.getInstance().getLightStateHistory().add(lightOn);
                             }
-                            if(!isBtActive && gson.isBtCommand()) {
-                            	System.out.println(gson.isLightOn());
-                            	startTimer(timer);
-                            	isBtActive = true;
-                            }
-                            lightOn.setMsgDate(LocalDateTime.now().toString());
-                            RoomState.getInstance().getLightStateHistory().add(lightOn);
                         }
                         Thread.sleep(1000);
                     } catch (Exception e) {
@@ -105,13 +106,14 @@ public class RunService {
         }
     }
 
-    private static void startTimer(Timer timer) {
+    private static void startTimer(final Timer timer) {
     	timer.schedule(new TimerTask() {
 		    @Override
 		    public void run() {
+		    	isBtActive = false;
 			    setAutomatic(true);
 		    }
-		}, 5000);
+		}, 10000);
 	}
 
 	private static void sendMessage(final SerialCommunication packet, final CommChannel channel) {
