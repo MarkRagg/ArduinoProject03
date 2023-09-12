@@ -1,11 +1,11 @@
 package RoomService;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import com.google.gson.Gson;
-
 import RoomService.http.DashboardMessage;
 import RoomService.http.RoomResource;
 import RoomService.mqtt.MQTTAgent;
@@ -77,9 +77,12 @@ public class RunService {
                         if (arduinoChannel.isMsgAvailable()) {
                             String msg;
                             msg = arduinoChannel.receiveMsg();
+                            var gson = new Gson().fromJson(msg, SerialCommunication.class);
+                            
                             System.out.println("New Arduino Msg available: " + msg);
-                            var newLight = new MQTTMsg(Boolean.parseBoolean(msg["lightOn"]));
-                            RoomState.getInstance().getLastLightState().add(newLight);
+                            var lightOn = new MQTTMsg(gson.isLightOn());
+                            lightOn.setMsgDate(LocalDateTime.now().toString());
+                            RoomState.getInstance().getLightStateHistory().add(lightOn);
                         }
                         Thread.sleep(1000);
                     } catch (Exception e) {
