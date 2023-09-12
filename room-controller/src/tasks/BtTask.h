@@ -6,6 +6,7 @@
 #include "MsgService.h"
 #include "../devices/Led.h"
 #include "../devices/ServoMotor.h"
+#include "SerialTask.h"
 
 class BtTask: public Task {
 
@@ -17,6 +18,8 @@ public:
 private:
     int rxPin;
     int txPin;
+    unsigned long prev_millis = 0;
+    unsigned long curr_millis = 0;
     String BT_input;                    // to store the complete message received via BT.
     char msgChar;                       // to store input character received via BT.
     Led* led;                           // the led to turn on/off.

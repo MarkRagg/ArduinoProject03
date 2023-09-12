@@ -6,6 +6,7 @@ bool is_day = false;
 bool movement_rel = false;
 int rollerBlindsOpening = 0;
 bool automatic = true;
+bool bt_command = false;
 
 void SerialTask::init(int period) {
   Task::init(period);
@@ -21,23 +22,22 @@ void SerialTask::tick() {
     StaticJsonDocument<112> data;
 
     deserializeJson(body, msg->getContent());
-    automatic = body["automatic"];
-    
-    is_light = body["lightOn"];
-    
 
-    is_day = body["day"];
-    
+    if(!bt_command) {
+      automatic = body["automatic"];
+      is_light = body["lightOn"];
+      is_day = body["day"];
+      movement_rel = body["movement"];
+      rollerBlindsOpening = body["rollerBlindsAngle"];
+    }
 
-    movement_rel = body["movement"];
 
-    rollerBlindsOpening = body["rollerBlindsAngle"];
-
-    data["automatic"] = body["automatic"];
+    data["automatic"] = automatic;
     data["lightOn"] = light_on;
     data["day"] = body["day"];
     data["movement"] = body["movement"];
-    data["rollerBlindsAngle"] = body["rollerBlindsAngle"];
+    data["rollerBlindsAngle"] = rollerBlindsOpening;
+    data["btCommand"] = bt_command;
 
     serializeJson(data, Serial);
     Serial.println("");

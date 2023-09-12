@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.google.gson.Gson;
 import RoomService.http.DashboardMessage;
@@ -47,20 +49,15 @@ public class RunService {
                     if (dashboardMsg.isPresent()) {
                     	setAutomatic(false);
                     	lastAutomaticMessage = new SerialCommunication(false, false,
-                    			dashboardMsg.get().isLight(), dashboardMsg.get().getAngle(), false);
+                    			dashboardMsg.get().isLight(), dashboardMsg.get().getAngle(), false, false);
                     	
-                    	timer.schedule(new TimerTask() {
-	            		    @Override
-	            		    public void run() {
-	            			    setAutomatic(true);
-	            		    }
-                		}, 10000);
+                    	startTimer(timer);
                     	sendMessage(lastAutomaticMessage, arduinoChannel);
                     } else if(!getAutomatic()) {
                     	sendMessage(lastAutomaticMessage, arduinoChannel);
                     } else if (light.isPresent() && movement.isPresent()) {
                     	sendMessage(new SerialCommunication(light.get().getDay(), movement.get().getMovementState(),
-                    			false, 0, true), arduinoChannel);
+                    			false, 0, true, false), arduinoChannel);
                     } else {
                         try {
                             Thread.sleep(1000);
@@ -81,6 +78,13 @@ public class RunService {
                             
                             System.out.println("New Arduino Msg available: " + msg);
                             var lightOn = new MQTTMsg(gson.isLightOn());
+                            if(!msg.contains("null")) setAutomatic(gson.isAutomatic());
+                            if(gson.isBtCommand()) setAutomatic(false);
+                            if(!getAutomatic()) {
+                            	System.out.println(gson.isLightOn());
+                            	lastAutomaticMessage = gson;
+                            	startTimer(timer);
+                            }
                             lightOn.setMsgDate(LocalDateTime.now().toString());
                             RoomState.getInstance().getLightStateHistory().add(lightOn);
                         }
@@ -98,9 +102,17 @@ public class RunService {
         }
     }
 
-    private static void sendMessage(final SerialCommunication packet, final CommChannel channel) {
+    private static void startTimer(Timer timer) {
+    	timer.schedule(new TimerTask() {
+		    @Override
+		    public void run() {
+			    setAutomatic(true);
+		    }
+		}, 5000);
+	}
+
+	private static void sendMessage(final SerialCommunication packet, final CommChannel channel) {
         try {
-        	//System.out.println(packet);
             channel.sendMsg(new Gson().toJson(packet));
             Thread.sleep(1000);
         } catch (InterruptedException e) {

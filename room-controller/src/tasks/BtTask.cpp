@@ -19,8 +19,14 @@ void BtTask::tick(){
         Chek if there is data transmitted via BT in the Serial channel,
         then read character by character until the end of the message.
     */
-    if (channel->available()) {
+    curr_millis = millis();
+    if(curr_millis - prev_millis > 5000 && bt_command) {
+        bt_command = false;
+        automatic = true;
+        prev_millis = curr_millis;
+    }
 
+    if (channel->available()) {
         msgChar = (char)channel->read();
         BT_input = "";
 
@@ -32,16 +38,24 @@ void BtTask::tick(){
         StaticJsonDocument<56> doc;
         deserializeJson(doc, BT_input);
 
+        bt_command = true;
+        automatic = false;
+
         int angle = (int)(doc["State"]);
 
         if(doc["State"] == "ON") {
             led->switchOn();
+            light_on = true;
+            is_light = true;
         } else if (doc["State"] == "OFF") {
             led->switchOff();
+            light_on = false;
+            is_light = false;
         } else if ((angle >= 0 ) && (angle <= 100)) {
             angle = map(angle, 0, 100, 0, 180);
             servo->move(angle);
+            rollerBlindsOpening = angle;
         }
-
+        prev_millis= millis();
     }
 }

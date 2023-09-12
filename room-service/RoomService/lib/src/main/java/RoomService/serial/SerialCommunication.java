@@ -7,15 +7,17 @@ public class SerialCommunication {
 	private boolean lightOn;
 	private int rollerBlindsAngle;
 	private boolean automatic;
+	private boolean btCommand;	
 
 	public SerialCommunication(boolean day, boolean movement, boolean lightOn,
-	        int rollerBlindsAngle, boolean automatic) {
+	        int rollerBlindsAngle, boolean automatic, boolean btCommand) {
 		super();
 		this.day = day;
 		this.movement = movement;
 		this.lightOn = lightOn;
 		this.rollerBlindsAngle = rollerBlindsAngle;
 		this.automatic = automatic;
+		this.btCommand = btCommand;
 	}
 
 	public boolean isDay() {
@@ -56,6 +58,14 @@ public class SerialCommunication {
 
 	public void setAutomatic(boolean automatic) {
 		this.automatic = automatic;
+	}
+
+	public boolean isBtCommand() {
+		return btCommand;
+	}
+
+	public void setBtCommand(boolean btCommand) {
+		this.btCommand = btCommand;
 	}
 
 	@Override
