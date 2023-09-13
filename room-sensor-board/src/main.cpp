@@ -18,8 +18,8 @@ extern bool movement;
 
 /* wifi network info */
 
-const char* ssid = "Vodafone-A80383340";
-const char* password = "HXHfMXLK2dqPMgHL"; //"admin222";
+const char* ssid = "ap";
+const char* password = "admin222";
 
 /* MQTT server address */
 const char* mqtt_server = "broker.mqtt-dashboard.com";

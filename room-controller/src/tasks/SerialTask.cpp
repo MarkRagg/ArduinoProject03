@@ -31,7 +31,6 @@ void SerialTask::tick() {
       rollerBlindsOpening = body["rollerBlindsAngle"];
     }
 
-
     data["automatic"] = automatic;
     data["lightOn"] = light_on;
     data["day"] = body["day"];
@@ -42,7 +41,6 @@ void SerialTask::tick() {
     serializeJson(data, Serial);
     Serial.println("");
 
-    /* NOT TO FORGET: message deallocation */
     delete msg;
   }
 }

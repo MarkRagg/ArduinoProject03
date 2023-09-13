@@ -15,10 +15,6 @@ void BtTask::init(int period){
 }
 
 void BtTask::tick(){
-    /*
-        Chek if there is data transmitted via BT in the Serial channel,
-        then read character by character until the end of the message.
-    */
     curr_millis = millis();
     if(curr_millis - prev_millis > 10000 && bt_command) {
         bt_command = false;
@@ -26,6 +22,11 @@ void BtTask::tick(){
         prev_millis = curr_millis;
     }
 
+    /*
+        Chek if there is data transmitted via BT in the Serial channel,
+        then read character by character until the end of the message.
+    */
+   
     if (channel->available()) {
         msgChar = (char)channel->read();
         BT_input = "";
