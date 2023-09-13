@@ -4,7 +4,6 @@
 #include "Task.h"
 #include "tasks/MsgService.h"
 #include <ArduinoJson.h>
-// #include "RollerBlindsTask.h"
 
 extern bool is_light;
 extern bool light_on;
@@ -20,9 +19,7 @@ public:
   void tick();
 
 private:
-  int baudrate;
   MsgServiceClass MsgService;
-  String str;
 };
 
 #endif

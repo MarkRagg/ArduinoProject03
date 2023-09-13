@@ -16,6 +16,11 @@ void BtTask::init(int period){
 
 void BtTask::tick(){
     curr_millis = millis();
+    
+    /*
+        If the timer has expired and there is a bluetooth
+        command active, the state returns to automatic.
+    */
     if(curr_millis - prev_millis > 10000 && bt_command) {
         bt_command = false;
         automatic = true;
@@ -26,7 +31,6 @@ void BtTask::tick(){
         Chek if there is data transmitted via BT in the Serial channel,
         then read character by character until the end of the message.
     */
-   
     if (channel->available()) {
         msgChar = (char)channel->read();
         BT_input = "";
