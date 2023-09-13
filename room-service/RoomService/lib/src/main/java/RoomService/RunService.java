@@ -84,7 +84,6 @@ public class RunService {
 	                                lastAutomaticMessage = gson;
 	                            }
 	                            if(!isBtActive && gson.isBtCommand()) {
-	                            	System.out.println(gson.isLightOn());
 	                            	startTimer(timer);
 	                            	isBtActive = true;
 	                            }
