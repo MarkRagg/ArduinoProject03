@@ -1,6 +1,10 @@
 
 const BASE_PATH = "http://localhost:3030"
 
+/**
+ * Attach a submit event listener to the dashboard form:
+ * on submit it sends a post request to the http service passing the new command.
+ */
 document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("controllerForm").addEventListener("submit", e => {
         e.preventDefault()
@@ -18,6 +22,9 @@ document.addEventListener("DOMContentLoaded", () => {
     })
 })
 
+/**
+ * Get room data from the http service and plot them into charts
+ */
 fetch(BASE_PATH + "/api/room", {mode: 'cors'}).then(res => res.json())
     .then((data) => {
         const ctxMovement = document.getElementById('roomDataChartMovement');
@@ -27,6 +34,9 @@ fetch(BASE_PATH + "/api/room", {mode: 'cors'}).then(res => res.json())
         plotDataHistory(data.movement, ctxMovement, "Movement History")
     })
 
+/**
+ * Function to plot data using chart.js
+ */
 const plotDataHistory = (data, ctx, label) => {
 
     const xValues = data.map(x => new Date(x.date).toLocaleString())
