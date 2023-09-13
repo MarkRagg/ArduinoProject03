@@ -19,6 +19,7 @@ import io.vertx.core.Vertx;
 
 public class RunService {
 
+	// Vars with synchronized method used in multiple threads
 	private static boolean automatic = true;
 	private static boolean isBtActive = false;
 	private static SerialCommunication lastAutomaticMessage;
@@ -39,6 +40,8 @@ public class RunService {
 
         try {
             final CommChannel arduinoChannel = new SerialCommChannel(portName, 9600);
+            
+            // thread for sending msg to arduino
             final Thread sender = new Thread(() -> {
                 while (true) {
 
@@ -68,6 +71,7 @@ public class RunService {
                 }
             });
 
+            // thread for receiving msg from arduino and store it
             final Thread receiver = new Thread(() -> {
                 while (true) {
                     try {
@@ -106,7 +110,12 @@ public class RunService {
             e.printStackTrace();
         }
     }
-
+    
+    /**
+     * it schedule a timer to limit manual command,
+     * it returns automatic after 10 seconds
+     * @param timer
+     */
     private static void startTimer(final Timer timer) {
     	timer.schedule(new TimerTask() {
 		    @Override
