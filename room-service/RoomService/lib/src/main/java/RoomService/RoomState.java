@@ -8,14 +8,18 @@ import java.util.Queue;
 
 import RoomService.http.DashboardMessage;
 import RoomService.mqtt.MQTTMovement;
-import RoomService.mqtt.MQTTMsg;
+import RoomService.mqtt.MQTTLight;
 
+/**
+ * Class to keep ESP messages history (movement and day), dashboard messages (to be send to Arduino)
+ * and Arduino light history.
+ * */
 public class RoomState {
 
 	private static RoomState instance = null;
 
-	private List<MQTTMsg> dayHistory;
-	private List<MQTTMsg> lightStateHistory;
+	private List<MQTTLight> dayHistory;
+	private List<MQTTLight> lightStateHistory;
 	private List<MQTTMovement> movementStateHistory;
 	private Queue<DashboardMessage> dashboardMessages;
 
@@ -41,11 +45,11 @@ public class RoomState {
             return Optional.ofNullable(this.dashboardMessages.poll());
         }
 
-	public synchronized List<MQTTMsg> getLightStateHistory() {
+	public synchronized List<MQTTLight> getLightStateHistory() {
 		return this.lightStateHistory;
 	}
 
-	public synchronized Optional<MQTTMsg> getLastLightState() {
+	public synchronized Optional<MQTTLight> getLastLightState() {
 	    if(this.lightStateHistory.size() == 0) {
 	        return Optional.empty();
 	    }
@@ -63,14 +67,14 @@ public class RoomState {
            return Optional.of(movementStateHistory.get(movementStateHistory.size() - 1));
 	}
 
-	public synchronized Optional<MQTTMsg> getLastDay() {
+	public synchronized Optional<MQTTLight> getLastDay() {
             if(dayHistory.size() == 0) {
                 return Optional.empty();
             }
             return Optional.of(dayHistory.get(dayHistory.size() - 1));
         }
 
-        public synchronized List<MQTTMsg> getDayHistory() {
+        public synchronized List<MQTTLight> getDayHistory() {
                 return this.dayHistory;
         }
 }

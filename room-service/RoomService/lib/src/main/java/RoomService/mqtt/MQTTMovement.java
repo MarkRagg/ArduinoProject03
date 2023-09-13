@@ -2,6 +2,9 @@ package RoomService.mqtt;
 
 import java.time.LocalDateTime;
 
+/**
+ * Class that represents the MQTT movement message sent from the ESP.
+ * */
 public class MQTTMovement {
 
     private String dateTime;

@@ -7,9 +7,14 @@ import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.handler.CorsHandler;
 
+/**
+ * Class for the http service, it contains the handlers for the room resource:
+ * get handler for the movement (esp) and light (arduino) histories;
+ * post handler to send a new command to Arduino.
+ * */
 public class RoomResource extends AbstractVerticle {
 
-	private int port;
+	private final int port;
 
 	public RoomResource(final int port) {
 		this.port = port;
@@ -29,6 +34,9 @@ public class RoomResource extends AbstractVerticle {
 		log("Service ready on port: " + port);
 	}
 
+	/**
+	 * Get handler for the movement and light histories.
+	 * */
 	private void handleGetResource(final RoutingContext routingContext) {
 		JsonObject res = new JsonObject();
 		res.put("light", RoomState.getInstance().getLightStateHistory().stream()
@@ -43,6 +51,9 @@ public class RoomResource extends AbstractVerticle {
 			.end(res.encodePrettily());
 	}
 
+	/**
+	 * Post handler to send a new command to Arduino.
+	 * */
 	private void handlePostResource(final RoutingContext routingContext) {
 	    routingContext.request().bodyHandler(bodyHandler -> {
 	        var body = bodyHandler.toJsonObject();
@@ -55,36 +66,41 @@ public class RoomResource extends AbstractVerticle {
 	}
 
 	private void log(final String msg) {
-		System.out.println("[ROOM RESOURCE] "+msg);
+		System.out.println("[ROOM RESOURCE] " + msg);
 	}
 
+	/**
+	 * Class to pack the data to be sent to the client.
+	 * */
 	private final class ResponseData {
-		
-		@SuppressWarnings("unused")
+
             private String date;
-    	    @SuppressWarnings("unused")
             private boolean value;
 
 	    public ResponseData(final String date, final boolean value) {
 	        this.date = date;
 	        this.value = value;
 	    }
-	    
-	    public String getDate() {
-	    	return date;
-	    }
-	    
-	    public boolean isValue() {
-	    	return value;
+
+	    @SuppressWarnings("unused")
+            public String getDate() {
+	    	return this.date;
 	    }
 
-		public void setDate(String date) {
-			this.date = date;
-		}
+	    @SuppressWarnings("unused")
+            public boolean isValue() {
+	    	return this.value;
+	    }
 
-		public void setValue(boolean value) {
-			this.value = value;
-		}
+            @SuppressWarnings("unused")
+            public void setDate(final String date) {
+                this.date = date;
+            }
+
+            @SuppressWarnings("unused")
+            public void setValue(final boolean value) {
+                this.value = value;
+            }
 	}
 
 }

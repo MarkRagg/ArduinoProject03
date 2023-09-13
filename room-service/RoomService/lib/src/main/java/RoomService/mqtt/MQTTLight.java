@@ -2,12 +2,15 @@ package RoomService.mqtt;
 
 import java.time.LocalDateTime;
 
-public class MQTTMsg {
+/**
+ * Class that represents the MQTT light message sent from the ESP.
+ * */
+public class MQTTLight {
 
 	private String dateTime;
 	private boolean day;
 
-	public MQTTMsg(final boolean day) {
+	public MQTTLight(final boolean day) {
 		super();
 		this.dateTime = LocalDateTime.now().toString();
 		this.day = day;

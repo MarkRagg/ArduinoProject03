@@ -1,5 +1,8 @@
 package RoomService.http;
 
+/**
+ * Class that represents the message sent through the dashboard.
+ * */
 public class DashboardMessage {
 
     private final boolean light;

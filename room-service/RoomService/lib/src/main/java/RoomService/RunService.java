@@ -11,7 +11,7 @@ import RoomService.http.DashboardMessage;
 import RoomService.http.RoomResource;
 import RoomService.mqtt.MQTTAgent;
 import RoomService.mqtt.MQTTMovement;
-import RoomService.mqtt.MQTTMsg;
+import RoomService.mqtt.MQTTLight;
 import RoomService.serial.CommChannel;
 import RoomService.serial.SerialCommChannel;
 import RoomService.serial.SerialCommunication;
@@ -25,10 +25,13 @@ public class RunService {
 	private static SerialCommunication lastAutomaticMessage;
 
     public static void main(String[] args) {
+
+        //deploy http service in order to exchange data with the dashboard
         Vertx vertxHttp = Vertx.vertx();
         RoomResource service = new RoomResource(3030);
         vertxHttp.deployVerticle(service);
 
+        //deploy mqtt agent
         Vertx vertxMqtt = Vertx.vertx();
         MQTTAgent agent = new MQTTAgent();
         vertxMqtt.deployVerticle(agent);
@@ -40,12 +43,12 @@ public class RunService {
 
         try {
             final CommChannel arduinoChannel = new SerialCommChannel(portName, 9600);
-            
+
             // thread for sending msg to arduino
             final Thread sender = new Thread(() -> {
                 while (true) {
 
-                    Optional<MQTTMsg> lastDay = RoomState.getInstance().getLastDay();
+                    Optional<MQTTLight> lastDay = RoomState.getInstance().getLastDay();
                     Optional<MQTTMovement> movement = RoomState.getInstance().getLastMovementState();
                     Optional<DashboardMessage> dashboardMsg = RoomState.getInstance().getLastDashboardMessage();
 
@@ -81,8 +84,8 @@ public class RunService {
                             var gson = new Gson().fromJson(msg, SerialCommunication.class);
 
                             System.out.println("New Arduino Msg available: " + msg);
-                            var lightOn = new MQTTMsg(gson.isLightOn());
-                            
+                            var lightOn = new MQTTLight(gson.isLightOn());
+
                             //this if ignore "null" arduino packet
                             if(!msg.contains("null")) {
 	                            if(gson.isBtCommand()) {
@@ -110,7 +113,7 @@ public class RunService {
             e.printStackTrace();
         }
     }
-    
+
     /**
      * it schedule a timer to limit manual command,
      * it returns automatic after 10 seconds
