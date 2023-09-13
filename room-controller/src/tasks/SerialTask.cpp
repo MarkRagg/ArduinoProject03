@@ -23,6 +23,7 @@ void SerialTask::tick() {
 
     deserializeJson(body, msg->getContent());
 
+    /* if there is a bluetooth command, arduino ignore java messages */
     if(!bt_command) {
       automatic = body["automatic"];
       is_light = body["lightOn"];

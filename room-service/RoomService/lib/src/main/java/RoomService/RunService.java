@@ -78,6 +78,8 @@ public class RunService {
 
                             System.out.println("New Arduino Msg available: " + msg);
                             var lightOn = new MQTTMsg(gson.isLightOn());
+                            
+                            //this if ignore "null" arduino packet
                             if(!msg.contains("null")) {
 	                            if(gson.isBtCommand()) {
 	                                setAutomatic(false);
