@@ -109,7 +109,6 @@ public class MainActivity extends AppCompatActivity {
     private void manageConnectedSocket(BluetoothSocket socket) {
         try {
             bluetoothOutputStream = socket.getOutputStream();
-            //emulatedBluetoothOutputStream = socket.getOutputStream();
             Log.i(C.TAG, "Connection successful!");
         } catch (IOException e) {
             Log.e(C.TAG, "Error occurred when creating output stream", e);
