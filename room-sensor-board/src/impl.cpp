@@ -9,6 +9,7 @@
 bool day;
 bool movement;
 
+// PIR Task 
 void impl::moveDetectorTask(void* parameter) {
   Pir* pir = new Pir(PIR_LED, PIR_TRESHOLD);
   Led* green_led = new Led(GREEN_LED);
@@ -27,6 +28,8 @@ void impl::moveDetectorTask(void* parameter) {
   }
 }
 
+
+//Photoresistor Task
 void impl::photoresistorTask(void* parameter) {
   Photoresistor* photores = new Photoresistor(PHOTORESISTOR_LED, PHOTORESISTOR_TRESHOLD);
   day = true;

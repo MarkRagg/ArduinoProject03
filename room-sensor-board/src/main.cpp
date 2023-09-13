@@ -93,18 +93,19 @@ void reconnect() {
 void setup() {
   Serial.begin(9600);
 
-  // Serial.begin(115200);
   setup_wifi();
   randomSeed(micros());
   client.setServer(mqtt_server, 1883);
   client.setCallback(callback);
 
+  //assign task to OS
   xTaskCreatePinnedToCore(impl::moveDetectorTask,"Task1",10000,NULL,1,&Task1,0);
   xTaskCreatePinnedToCore(impl::photoresistorTask,"Task2",10000,NULL,1,&Task2,1);
 }
 
 void loop() {
 
+  // try to connect to the server
   if (!client.connected()) {
     reconnect();
   }
